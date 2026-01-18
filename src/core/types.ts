@@ -62,17 +62,45 @@ export interface MindMuxMetadata {
   userId: string;                  // Auto-generated UUID
 }
 
+// Task status enum
+export type TaskStatus =
+  | 'pending'     // Created, waiting for dependencies
+  | 'queued'      // Ready, in queue waiting for agent
+  | 'assigned'    // Agent selected, about to run
+  | 'running'     // Currently executing
+  | 'completed'   // Finished successfully
+  | 'failed'      // Failed after retries exhausted
+  | 'cancelled';  // Cancelled by user
+
 // Task definition
 export interface Task {
   id: string;                      // UUID v4
-  agentId: string;                 // Agent ID executing the task
   prompt: string;                  // Task prompt/instruction
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: TaskStatus;              // Current status
+  priority: number;                // 0-100, higher = urgent
+  requiredCapabilities: string[];  // Agent must have ALL
+  dependsOn?: string[];            // Prerequisite task IDs
+  agentId?: string;                // Assigned agent
   createdAt: string;               // ISO 8601 timestamp
-  startedAt?: string;              // ISO 8601 timestamp
-  completedAt?: string;            // ISO 8601 timestamp
-  result?: string;                 // Task result/output
-  error?: string;                  // Error message if failed
+  queuedAt?: string;               // When added to queue
+  assignedAt?: string;             // When agent assigned
+  startedAt?: string;              // When execution began
+  completedAt?: string;            // When finished
+  result?: string;                 // Output on success
+  error?: string;                  // Error message on failure
+  retryCount: number;              // Current retry (0-based)
+  maxRetries: number;              // Max attempts (default 3)
+  timeout?: number;                // Timeout in ms
+}
+
+// Task creation options
+export interface CreateTaskOptions {
+  prompt: string;
+  priority?: number;
+  requiredCapabilities?: string[];
+  dependsOn?: string[];
+  timeout?: number;
+  maxRetries?: number;
 }
 
 // Agents storage structure

@@ -254,6 +254,10 @@ export class AgentLifecycle {
       agentId: agent.id,
       prompt,
       status: 'pending',
+      priority: 50,
+      requiredCapabilities: [],
+      retryCount: 0,
+      maxRetries: 3,
       createdAt: new Date().toISOString(),
     };
 
