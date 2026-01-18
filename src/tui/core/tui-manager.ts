@@ -8,6 +8,8 @@ import { colors } from '../utils/colors.js';
 import { boxTop, boxBottom, boxLine, center } from '../utils/formatters.js';
 import { AgentManager } from '../../core/agent-manager.js';
 import { renderSessionList } from '../components/session-list.js';
+import { renderAgentDetail } from '../components/agent-detail.js';
+import { Agent } from '../../core/types.js';
 
 export interface TUIOptions {
   title?: string;
@@ -22,6 +24,9 @@ export class TUIManager {
   private refreshTimer?: NodeJS.Timeout;
   private options: Required<TUIOptions>;
   private selectedIndex = 0;
+  private viewMode: 'list' | 'detail' = 'list';
+  private selectedAgent: Agent | null = null;
+  private refreshPaused = false;
 
   constructor(options: TUIOptions) {
     this.screen = new ScreenBuffer();
@@ -40,16 +45,65 @@ export class TUIManager {
    */
   private setupKeyHandlers(): void {
     // Navigation
-    this.keyboard.on('j', () => this.navigateDown());
-    this.keyboard.on('k', () => this.navigateUp());
-    this.keyboard.on('down', () => this.navigateDown());
-    this.keyboard.on('up', () => this.navigateUp());
+    this.keyboard.on('j', () => this.handleKey('navigate-down'));
+    this.keyboard.on('k', () => this.handleKey('navigate-up'));
+    this.keyboard.on('down', () => this.handleKey('navigate-down'));
+    this.keyboard.on('up', () => this.handleKey('navigate-up'));
 
-    // Actions
+    // Selection
+    this.keyboard.on('return', () => this.handleKey('select'));
+    this.keyboard.on('escape', () => this.handleKey('back'));
+    this.keyboard.on('backspace', () => this.handleKey('back'));
+
+    // Controls
+    this.keyboard.on('r', () => this.toggleRefresh());
     this.keyboard.on('q', () => this.quit());
     this.keyboard.on('ctrl+c', () => this.quit());
     this.keyboard.on('h', () => this.showHelp());
     this.keyboard.on('?', () => this.showHelp());
+  }
+
+  /**
+   * Handle key based on current view mode
+   */
+  private handleKey(action: string): void {
+    if (this.viewMode === 'detail') {
+      // In detail view, any key returns to list
+      if (action === 'back' || action === 'select') {
+        this.viewMode = 'list';
+        this.selectedAgent = null;
+        this.render();
+      }
+    } else {
+      // In list view
+      if (action === 'navigate-down') {
+        this.navigateDown();
+      } else if (action === 'navigate-up') {
+        this.navigateUp();
+      } else if (action === 'select') {
+        this.viewAgentDetail();
+      }
+    }
+  }
+
+  /**
+   * View selected agent detail
+   */
+  private viewAgentDetail(): void {
+    const agents = this.options.agentManager.listAgents();
+    if (agents.length > 0 && this.selectedIndex >= 0 && this.selectedIndex < agents.length) {
+      this.selectedAgent = agents[this.selectedIndex];
+      this.viewMode = 'detail';
+      this.render();
+    }
+  }
+
+  /**
+   * Toggle refresh pause
+   */
+  private toggleRefresh(): void {
+    this.refreshPaused = !this.refreshPaused;
+    this.render();
   }
 
   /**
@@ -83,7 +137,7 @@ export class TUIManager {
 
     // Setup refresh timer
     this.refreshTimer = setInterval(() => {
-      if (this.running) {
+      if (this.running && !this.refreshPaused && this.viewMode === 'list') {
         this.render();
       }
     }, this.options.refreshInterval);
@@ -104,20 +158,30 @@ export class TUIManager {
     );
     this.screen.writeLine(colors.border(boxBottom(width)));
 
-    // Session list
-    const agents = this.options.agentManager.listAgents();
-    const sessionLines = renderSessionList(agents, {
-      width,
-      selectedIndex: this.selectedIndex,
-    });
+    // Content based on view mode
+    if (this.viewMode === 'detail' && this.selectedAgent) {
+      // Detail view
+      const detailLines = renderAgentDetail(this.selectedAgent, width);
+      detailLines.forEach(line => this.screen.writeLine(line));
+    } else {
+      // List view
+      const agents = this.options.agentManager.listAgents();
+      const sessionLines = renderSessionList(agents, {
+        width,
+        selectedIndex: this.selectedIndex,
+      });
 
-    sessionLines.forEach(line => this.screen.writeLine(line));
+      sessionLines.forEach(line => this.screen.writeLine(line));
 
-    // Footer
-    this.screen.writeLine(colors.border(boxTop(width)));
-    this.screen.writeLine(
-      colors.border(boxLine(colors.dim('j/k: navigate | h: help | q: quit'), width))
-    );
+      // Footer with refresh status
+      const refreshStatus = this.refreshPaused ? colors.warning('[PAUSED]') : '';
+      const footer = `j/k: nav | Enter: view | r: ${this.refreshPaused ? 'resume' : 'pause'} | h: help | q: quit ${refreshStatus}`;
+
+      this.screen.writeLine(colors.border(boxTop(width)));
+      this.screen.writeLine(
+        colors.border(boxLine(colors.dim(footer), width))
+      );
+    }
 
     this.screen.render();
   }
@@ -139,15 +203,17 @@ export class TUIManager {
     this.screen.writeLine('');
     this.screen.writeLine('  Keyboard Shortcuts:');
     this.screen.writeLine('');
-    this.screen.writeLine('  j, ↓    - Navigate down');
-    this.screen.writeLine('  k, ↑    - Navigate up');
-    this.screen.writeLine('  h, ?    - Show this help');
-    this.screen.writeLine('  q       - Quit');
-    this.screen.writeLine('  Ctrl+C  - Quit');
+    this.screen.writeLine('  j, ↓       - Navigate down');
+    this.screen.writeLine('  k, ↑       - Navigate up');
+    this.screen.writeLine('  Enter      - View agent details');
+    this.screen.writeLine('  Esc, ←     - Back to list');
+    this.screen.writeLine('  r          - Toggle auto-refresh');
+    this.screen.writeLine('  h, ?       - Show this help');
+    this.screen.writeLine('  q, Ctrl+C  - Quit');
     this.screen.writeLine('');
     this.screen.writeLine(colors.border(boxTop(width)));
     this.screen.writeLine(
-      colors.border(boxLine(colors.dim('Phase 5.2 - Session Display'), width))
+      colors.border(boxLine(colors.dim('Phase 5.3 - Interactive Controls'), width))
     );
     this.screen.render();
   }
