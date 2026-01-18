@@ -38,6 +38,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "ansis": "^4.2.0",
     "commander": "^13.1.0",
     "dotenv": "^17.2.3",
     "node-tmux": "^1.0.2"
