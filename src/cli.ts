@@ -20,6 +20,7 @@ import { createTaskListCommand } from './commands/task/list';
 import { createTaskStatusCommand } from './commands/task/status';
 import { createTaskCancelCommand } from './commands/task/cancel';
 import { createTaskQueueCommand } from './commands/task/queue';
+import { tuiCommand } from './commands/tui';
 import { ConfigManager } from './core/config-manager';
 import { AgentManager } from './core/agent-manager';
 import { TmuxController } from './core/tmux-controller';
@@ -103,6 +104,9 @@ program.addCommand(createTaskQueueCommand(getTaskQueueManager));
 
 // Register config commands
 program.addCommand(showConfigCommand);
+
+// Register TUI command
+program.addCommand(tuiCommand);
 
 // Parse arguments
 program.parse();
