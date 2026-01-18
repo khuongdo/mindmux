@@ -1,0 +1,2645 @@
+
+> mindmux@0.1.0 test
+> vitest
+
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+ RUN  v3.2.4 /Users/nicosys/repo-personal/mindmux
+
+TAP version 13
+TAP version 13
+TAP version 13
+TAP version 13
+# Subtest: privacy-block.cjs
+    # Subtest: isSafeFile
+        # Subtest: returns true for .example files
+        ok 1 - returns true for .example files
+          ---
+          duration_ms: 2.087041
+          ...
+        # Subtest: returns true for .sample files
+        ok 2 - returns true for .sample files
+          ---
+          duration_ms: 0.187958
+          ...
+        # Subtest: returns true for .template files
+        ok 3 - returns true for .template files
+          ---
+          duration_ms: 0.2135
+          ...
+        # Subtest: returns false for actual sensitive files
+        ok 4 - returns false for actual sensitive files
+          ---
+          duration_ms: 0.059209
+          ...
+        # Subtest: handles null/undefined gracefully
+        ok 5 - handles null/undefined gracefully
+          ---
+          duration_ms: 0.043666
+          ...
+        1..5
+    ok 1 - isSafeFile
+      ---
+      duration_ms: 3.584875
+      type: 'suite'
+      ...
+    # Subtest: hasApprovalPrefix
+        # Subtest: returns true for APPROVED: prefix
+        ok 1 - returns true for APPROVED: prefix
+          ---
+          duration_ms: 0.073542
+          ...
+        # Subtest: returns false without prefix
+        ok 2 - returns false without prefix
+          ---
+          duration_ms: 0.049542
+          ...
+        # Subtest: handles null/undefined gracefully
+        ok 3 - handles null/undefined gracefully
+          ---
+          duration_ms: 0.066875
+          ...
+        # Subtest: is case-sensitive
+        ok 4 - is case-sensitive
+          ---
+          duration_ms: 1.169458
+          ...
+        1..4
+    ok 2 - hasApprovalPrefix
+      ---
+      duration_ms: 1.7195
+      type: 'suite'
+      ...
+    # Subtest: stripApprovalPrefix
+        # Subtest: removes APPROVED: prefix
+        ok 1 - removes APPROVED: prefix
+          ---
+          duration_ms: 0.101292
+          ...
+        # Subtest: returns path unchanged without prefix
+        ok 2 - returns path unchanged without prefix
+          ---
+          duration_ms: 0.047917
+          ...
+        # Subtest: handles empty/null input
+        ok 3 - handles empty/null input
+          ---
+          duration_ms: 0.040208
+          ...
+        1..3
+    ok 3 - stripApprovalPrefix
+      ---
+      duration_ms: 0.418958
+      type: 'suite'
+      ...
+    # Subtest: isPrivacySensitive
+        # Subtest: env files
+            # Subtest: blocks .env
+            ok 1 - blocks .env
+              ---
+              duration_ms: 0.108875
+              ...
+            # Subtest: blocks .env.local, .env.production, etc.
+            ok 2 - blocks .env.local, .env.production, etc.
+              ---
+              duration_ms: 0.102708
+              ...
+            # Subtest: blocks paths containing .env
+            ok 3 - blocks paths containing .env
+              ---
+              duration_ms: 0.050125
+              ...
+            # Subtest: allows .env.example, .env.sample, .env.template
+            ok 4 - allows .env.example, .env.sample, .env.template
+              ---
+              duration_ms: 0.045292
+              ...
+            1..4
+        ok 1 - env files
+          ---
+          duration_ms: 0.620375
+          type: 'suite'
+          ...
+        # Subtest: credentials and secrets
+            # Subtest: blocks credentials files
+            ok 1 - blocks credentials files
+              ---
+              duration_ms: 0.137375
+              ...
+            # Subtest: blocks secrets files
+            ok 2 - blocks secrets files
+              ---
+              duration_ms: 0.251667
+              ...
+            1..2
+        ok 2 - credentials and secrets
+          ---
+          duration_ms: 0.462084
+          type: 'suite'
+          ...
+        # Subtest: private keys
+            # Subtest: blocks .pem files
+            ok 1 - blocks .pem files
+              ---
+              duration_ms: 0.088958
+              ...
+            # Subtest: blocks .key files
+            ok 2 - blocks .key files
+              ---
+              duration_ms: 0.055292
+              ...
+            # Subtest: blocks SSH keys
+            ok 3 - blocks SSH keys
+              ---
+              duration_ms: 0.044041
+              ...
+            1..3
+        ok 3 - private keys
+          ---
+          duration_ms: 0.270084
+          type: 'suite'
+          ...
+        # Subtest: path normalization
+            # Subtest: handles Windows paths
+            ok 1 - handles Windows paths
+              ---
+              duration_ms: 0.052459
+              ...
+            # Subtest: handles URI-encoded paths
+            ok 2 - handles URI-encoded paths
+              ---
+              duration_ms: 0.029
+              ...
+            1..2
+        ok 4 - path normalization
+          ---
+          duration_ms: 0.205583
+          type: 'suite'
+          ...
+        # Subtest: APPROVED: prefix handling
+            # Subtest: still detects sensitivity with APPROVED: prefix
+            ok 1 - still detects sensitivity with APPROVED: prefix
+              ---
+              duration_ms: 0.043042
+              ...
+            1..1
+        ok 5 - APPROVED: prefix handling
+          ---
+          duration_ms: 0.082375
+          type: 'suite'
+          ...
+        # Subtest: handles null/undefined gracefully
+        ok 6 - handles null/undefined gracefully
+          ---
+          duration_ms: 0.044166
+          ...
+        1..6
+    ok 4 - isPrivacySensitive
+      ---
+      duration_ms: 1.952334
+      type: 'suite'
+      ...
+    # Subtest: extractPaths
+        # Subtest: extracts file_path
+        ok 1 - extracts file_path
+          ---
+          duration_ms: 0.437291
+          ...
+        # Subtest: extracts path
+        ok 2 - extracts path
+          ---
+          duration_ms: 0.045166
+          ...
+        # Subtest: extracts pattern
+        ok 3 - extracts pattern
+          ---
+          duration_ms: 0.038875
+          ...
+        # Subtest: extracts multiple fields
+        ok 4 - extracts multiple fields
+          ---
+          duration_ms: 0.033333
+          ...
+        # Subtest: command parsing
+            # Subtest: extracts .env from commands
+            ok 1 - extracts .env from commands
+              ---
+              duration_ms: 0.153917
+              ...
+            # Subtest: extracts .env.local from commands
+            ok 2 - extracts .env.local from commands
+              ---
+              duration_ms: 0.231125
+              ...
+            # Subtest: extracts APPROVED: paths from commands
+            ok 3 - extracts APPROVED: paths from commands
+              ---
+              duration_ms: 0.046458
+              ...
+            # Subtest: prioritizes APPROVED: over plain .env in same command
+            ok 4 - prioritizes APPROVED: over plain .env in same command
+              ---
+              duration_ms: 0.105791
+              ...
+            # Subtest: extracts from variable assignments
+            ok 5 - extracts from variable assignments
+              ---
+              duration_ms: 0.053084
+              ...
+            # Subtest: extracts from command substitution
+            ok 6 - extracts from command substitution
+              ---
+              duration_ms: 0.050917
+              ...
+            1..6
+        ok 5 - command parsing
+          ---
+          duration_ms: 0.765959
+          type: 'suite'
+          ...
+        # Subtest: handles null/undefined input
+        ok 6 - handles null/undefined input
+          ---
+          duration_ms: 0.037917
+          ...
+        1..6
+    ok 5 - extractPaths
+      ---
+      duration_ms: 1.480083
+      type: 'suite'
+      ...
+    1..5
+ok 1 - privacy-block.cjs
+  ---
+  duration_ms: 9.896083
+  type: 'suite'
+  ...
+# Subtest: formatBlockMessage output structure
+    # Subtest: JSON structure contract is documented
+    ok 1 - JSON structure contract is documented
+      ---
+      duration_ms: 1.855333
+      ...
+    1..1
+ok 2 - formatBlockMessage output structure
+  ---
+  duration_ms: 2.039375
+  type: 'suite'
+  ...
+# Subtest: dev-rules-reminder.cjs
+    # Subtest: Basic Functionality
+        # Subtest: exits with code 0 (non-blocking)
+        ok 1 - exits with code 0 (non-blocking)
+          ---
+          duration_ms: 72.331
+          ...
+# Subtest: subagent-init.cjs
+    # Subtest: Basic Functionality
+        # Subtest: exits with code 0 (non-blocking)
+        ok 1 - exits with code 0 (non-blocking)
+          ---
+          duration_ms: 68.349708
+          ...
+TAP version 13
+# Subtest: ck-config-utils.cjs
+    # Subtest: deepMerge
+        # Subtest: merges nested objects
+        ok 1 - merges nested objects
+          ---
+          duration_ms: 2.195334
+          ...
+        # Subtest: source values override target
+        ok 2 - source values override target
+          ---
+          duration_ms: 0.082667
+          ...
+        # Subtest: arrays are replaced entirely
+        ok 3 - arrays are replaced entirely
+          ---
+          duration_ms: 0.065458
+          ...
+        # Subtest: handles null source
+        ok 4 - handles null source
+          ---
+          duration_ms: 0.053542
+          ...
+        # Subtest: handles null target
+        ok 5 - handles null target
+          ---
+          duration_ms: 0.046625
+          ...
+        # Subtest: handles null values in source
+        ok 6 - handles null values in source
+          ---
+          duration_ms: 0.058458
+          ...
+        # Subtest: deep merges multiple levels
+        ok 7 - deep merges multiple levels
+          ---
+          duration_ms: 0.063375
+          ...
+        1..7
+    ok 1 - deepMerge
+      ---
+      duration_ms: 3.564333
+      type: 'suite'
+      ...
+    # Subtest: normalizePath
+        # Subtest: returns null for empty string
+        ok 1 - returns null for empty string
+          ---
+          duration_ms: 0.108958
+          ...
+        # Subtest: returns null for whitespace only
+        ok 2 - returns null for whitespace only
+          ---
+          duration_ms: 0.04
+          ...
+        # Subtest: returns null for null input
+        ok 3 - returns null for null input
+          ---
+          duration_ms: 0.043125
+          ...
+        # Subtest: returns null for undefined
+        ok 4 - returns null for undefined
+          ---
+          duration_ms: 0.03675
+          ...
+        # Subtest: trims whitespace
+        ok 5 - trims whitespace
+          ---
+          duration_ms: 0.149042
+          ...
+        # Subtest: removes trailing slashes
+        ok 6 - removes trailing slashes
+          ---
+          duration_ms: 0.074
+          ...
+        # Subtest: preserves internal slashes
+        ok 7 - preserves internal slashes
+          ---
+          duration_ms: 0.119958
+          ...
+        # Subtest: handles Windows backslashes
+        ok 8 - handles Windows backslashes
+          ---
+          duration_ms: 0.067083
+          ...
+        # Subtest: returns null for only slashes
+        ok 9 - returns null for only slashes
+          ---
+          duration_ms: 0.03625
+          ...
+        1..9
+    ok 2 - normalizePath
+      ---
+      duration_ms: 1.274291
+      type: 'suite'
+      ...
+    # Subtest: isAbsolutePath
+        # Subtest: returns true for Unix absolute paths
+        ok 1 - returns true for Unix absolute paths
+          ---
+          duration_ms: 0.066041
+          ...
+        # Subtest: returns true for Windows absolute paths (on Windows)
+        ok 2 - returns true for Windows absolute paths (on Windows)
+          ---
+          duration_ms: 0.157209
+          ...
+        # Subtest: returns false for relative paths
+        ok 3 - returns false for relative paths
+          ---
+          duration_ms: 0.041541
+          ...
+        # Subtest: returns false for null/undefined
+        ok 4 - returns false for null/undefined
+          ---
+          duration_ms: 0.03175
+          ...
+        1..4
+    ok 3 - isAbsolutePath
+      ---
+      duration_ms: 0.49925
+      type: 'suite'
+      ...
+    # Subtest: sanitizePath
+        # Subtest: allows normal relative paths
+        ok 1 - allows normal relative paths
+          ---
+          duration_ms: 0.130209
+          ...
+        # Subtest: allows absolute paths
+        ok 2 - allows absolute paths
+          ---
+          duration_ms: 0.033583
+          ...
+        # Subtest: blocks null bytes
+        ok 3 - blocks null bytes
+          ---
+          duration_ms: 0.032834
+          ...
+        # Subtest: blocks path traversal
+        ok 4 - blocks path traversal
+          ---
+          duration_ms: 0.1255
+          ...
+        # Subtest: allows paths within project
+        ok 5 - allows paths within project
+          ---
+          duration_ms: 0.05375
+          ...
+        # Subtest: returns null for empty input
+        ok 6 - returns null for empty input
+          ---
+          duration_ms: 0.032708
+          ...
+        1..6
+    ok 4 - sanitizePath
+      ---
+      duration_ms: 0.538417
+      type: 'suite'
+      ...
+    # Subtest: sanitizeSlug
+        # Subtest: returns empty for null/undefined
+        ok 1 - returns empty for null/undefined
+          ---
+          duration_ms: 0.074708
+          ...
+        # Subtest: converts spaces to hyphens
+        ok 2 - converts spaces to hyphens
+          ---
+          duration_ms: 0.203542
+          ...
+        # Subtest: removes invalid filename chars then converts remaining special chars
+        ok 3 - removes invalid filename chars then converts remaining special chars
+          ---
+          duration_ms: 0.080791
+          ...
+        # Subtest: collapses multiple hyphens
+        ok 4 - collapses multiple hyphens
+          ---
+          duration_ms: 0.031417
+          ...
+        # Subtest: removes leading/trailing hyphens
+        ok 5 - removes leading/trailing hyphens
+          ---
+          duration_ms: 0.028791
+          ...
+        # Subtest: truncates long slugs
+        ok 6 - truncates long slugs
+          ---
+          duration_ms: 0.032959
+          ...
+        # Subtest: handles valid slugs unchanged
+        ok 7 - handles valid slugs unchanged
+          ---
+          duration_ms: 0.0305
+          ...
+        1..7
+    ok 5 - sanitizeSlug
+      ---
+      duration_ms: 0.622042
+      type: 'suite'
+      ...
+    # Subtest: escapeShellValue
+        # Subtest: escapes backslashes
+        ok 1 - escapes backslashes
+          ---
+          duration_ms: 0.072667
+          ...
+        # Subtest: escapes double quotes
+        ok 2 - escapes double quotes
+          ---
+          duration_ms: 0.032417
+          ...
+        # Subtest: escapes dollar signs
+        ok 3 - escapes dollar signs
+          ---
+          duration_ms: 0.030167
+          ...
+        # Subtest: escapes backticks
+        ok 4 - escapes backticks
+          ---
+          duration_ms: 0.029125
+          ...
+        # Subtest: handles non-string input
+        ok 5 - handles non-string input
+          ---
+          duration_ms: 0.03
+          ...
+        # Subtest: escapes combined special chars
+        ok 6 - escapes combined special chars
+          ---
+          duration_ms: 0.283459
+          ...
+        1..6
+    ok 6 - escapeShellValue
+      ---
+      duration_ms: 4.741209
+      type: 'suite'
+      ...
+    # Subtest: extractSlugFromBranch
+        # Subtest: extracts from feat/ branches
+        ok 1 - extracts from feat/ branches
+          ---
+          duration_ms: 0.1655
+          ...
+        # Subtest: extracts from fix/ branches
+        ok 2 - extracts from fix/ branches
+          ---
+          duration_ms: 0.106625
+          ...
+        # Subtest: extracts from chore/ branches
+        ok 3 - extracts from chore/ branches
+          ---
+          duration_ms: 0.037708
+          ...
+        # Subtest: handles nested prefixes
+        ok 4 - handles nested prefixes
+          ---
+          duration_ms: 0.032042
+          ...
+        # Subtest: returns null for non-matching branches
+        ok 5 - returns null for non-matching branches
+          ---
+          duration_ms: 0.030959
+          ...
+        # Subtest: returns null for null/undefined
+        ok 6 - returns null for null/undefined
+          ---
+          duration_ms: 0.029208
+          ...
+        # Subtest: sanitizes extracted slug
+        ok 7 - sanitizes extracted slug
+          ---
+          duration_ms: 0.040333
+          ...
+        1..7
+    ok 7 - extractSlugFromBranch
+      ---
+      duration_ms: 0.626041
+      type: 'suite'
+      ...
+    # Subtest: extractIssueFromBranch
+        # Subtest: extracts from issue-123 format
+        ok 1 - extracts from issue-123 format
+          ---
+          duration_ms: 0.229292
+          ...
+        # Subtest: extracts from gh-123 format
+        ok 2 - extracts from gh-123 format
+          ---
+          duration_ms: 0.095125
+          ...
+        # Subtest: extracts from fix-123 format
+        ok 3 - extracts from fix-123 format
+          ---
+          duration_ms: 0.029959
+          ...
+        # Subtest: extracts from feat-123 format
+        ok 4 - extracts from feat-123 format
+          ---
+          duration_ms: 0.02875
+          ...
+        # Subtest: extracts from /123/ format
+        ok 5 - extracts from /123/ format
+          ---
+          duration_ms: 0.028625
+          ...
+        # Subtest: extracts from \#123 format
+        ok 6 - extracts from \#123 format
+          ---
+          duration_ms: 0.0465
+          ...
+        # Subtest: returns null for no issue
+        ok 7 - returns null for no issue
+          ---
+          duration_ms: 0.078083
+          ...
+        # Subtest: returns null for null/undefined
+        ok 8 - returns null for null/undefined
+          ---
+          duration_ms: 0.027458
+          ...
+        1..8
+    ok 8 - extractIssueFromBranch
+      ---
+      duration_ms: 0.716875
+      type: 'suite'
+      ...
+    # Subtest: getReportsPath
+        # Subtest: uses plan-specific path for session-resolved plans
+        ok 1 - uses plan-specific path for session-resolved plans
+          ---
+          duration_ms: 0.092
+          ...
+        # Subtest: uses default path for branch-resolved plans
+        ok 2 - uses default path for branch-resolved plans
+          ---
+          duration_ms: 0.036708
+          ...
+        # Subtest: uses default path for null plan
+        ok 3 - uses default path for null plan
+          ---
+          duration_ms: 0.029208
+          ...
+        # Subtest: handles whitespace-only planPath (Issue \#327)
+        ok 4 - handles whitespace-only planPath (Issue \#327)
+          ---
+          duration_ms: 0.03
+          ...
+        # Subtest: returns absolute path when baseDir provided
+        ok 5 - returns absolute path when baseDir provided
+          ---
+          duration_ms: 0.039292
+          ...
+        1..5
+    ok 9 - getReportsPath
+      ---
+      duration_ms: 0.339042
+      type: 'suite'
+      ...
+    # Subtest: formatDate
+        # Subtest: formats YYMMDD correctly
+        ok 1 - formats YYMMDD correctly
+          ---
+          duration_ms: 0.336208
+          ...
+        # Subtest: formats YYMMDD-HHmm correctly
+        ok 2 - formats YYMMDD-HHmm correctly
+          ---
+          duration_ms: 0.056125
+          ...
+        # Subtest: formats YYYYMMDD correctly
+        ok 3 - formats YYYYMMDD correctly
+          ---
+          duration_ms: 0.484666
+          ...
+        # Subtest: handles complex format
+        ok 4 - handles complex format
+          ---
+          duration_ms: 0.324875
+          ...
+        1..4
+    ok 10 - formatDate
+      ---
+      duration_ms: 1.814458
+      type: 'suite'
+      ...
+    # Subtest: validateNamingPattern
+        # Subtest: valid pattern with {slug}
+        ok 1 - valid pattern with {slug}
+          ---
+          duration_ms: 0.182542
+          ...
+        # Subtest: invalid: missing {slug}
+        ok 2 - invalid: missing {slug}
+          ---
+          duration_ms: 0.0715
+          ...
+        # Subtest: invalid: empty pattern
+        ok 3 - invalid: empty pattern
+          ---
+          duration_ms: 0.028834
+          ...
+        # Subtest: invalid: null pattern
+        ok 4 - invalid: null pattern
+          ---
+          duration_ms: 0.026417
+          ...
+        # Subtest: invalid: unresolved placeholder
+        ok 5 - invalid: unresolved placeholder
+          ---
+          duration_ms: 0.032
+          ...
+        1..5
+    ok 11 - validateNamingPattern
+      ---
+      duration_ms: 0.557708
+      type: 'suite'
+      ...
+    # Subtest: resolveNamingPattern
+        # Subtest: includes date in pattern
+        ok 1 - includes date in pattern
+          ---
+          duration_ms: 0.318
+          ...
+        # Subtest: includes {slug} placeholder
+        ok 2 - includes {slug} placeholder
+          ---
+          duration_ms: 0.11275
+          ...
+        # Subtest: includes issue when branch has issue
+        ok 3 - includes issue when branch has issue
+          ---
+          duration_ms: 0.051709
+          ...
+        # Subtest: removes {issue} cleanly when no issue
+        ok 4 - removes {issue} cleanly when no issue
+          ---
+          duration_ms: 0.3955
+          ...
+        # Subtest: uses issuePrefix from config
+        ok 5 - uses issuePrefix from config
+          ---
+          duration_ms: 0.158834
+          ...
+        1..5
+    ok 12 - resolveNamingPattern
+      ---
+      duration_ms: 1.431625
+      type: 'suite'
+      ...
+    # Subtest: getGitBranch
+        # Subtest: returns null for non-git directory
+        ok 1 - returns null for non-git directory
+          ---
+          duration_ms: 18.903083
+          ...
+        # Subtest: returns branch name for git directory
+        ok 2 - returns branch name for git directory
+          ---
+          duration_ms: 10.439666
+          ...
+        1..2
+    ok 13 - getGitBranch
+      ---
+      duration_ms: 29.532125
+      type: 'suite'
+      ...
+    # Subtest: getGitRoot
+        # Subtest: returns null for non-git directory
+        ok 1 - returns null for non-git directory
+          ---
+          duration_ms: 10.258666
+          ...
+        # Subtest: returns absolute path for git directory
+        ok 2 - returns absolute path for git directory
+          ---
+          duration_ms: 11.315166
+          ...
+        # Subtest: uses cwd parameter for resolution
+        ok 3 - uses cwd parameter for resolution
+          ---
+          duration_ms: 19.7445
+          ...
+        1..3
+    ok 14 - getGitRoot
+      ---
+      duration_ms: 41.570292
+      type: 'suite'
+      ...
+    # Subtest: DEFAULT_CONFIG
+        # Subtest: has required plan config
+        ok 1 - has required plan config
+          ---
+          duration_ms: 0.105042
+          ...
+        # Subtest: has required paths config
+        ok 2 - has required paths config
+          ---
+          duration_ms: 0.034583
+          ...
+        # Subtest: has locale config
+        ok 3 - has locale config
+          ---
+          duration_ms: 0.032208
+          ...
+        # Subtest: has trust config
+        ok 4 - has trust config
+          ---
+          duration_ms: 0.034958
+          ...
+        1..4
+    ok 15 - DEFAULT_CONFIG
+      ---
+      duration_ms: 0.331917
+      type: 'suite'
+      ...
+    1..15
+ok 1 - ck-config-utils.cjs
+  ---
+  duration_ms: 89.451792
+  type: 'suite'
+  ...
+ ❯ src/core/config-manager.test.ts (24 tests | 24 failed) 14ms
+   × ConfigManager > Constructor and initialization > should create config directories when they do not exist 6ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Constructor and initialization > should create .gitignore in global config dir 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Constructor and initialization > should initialize config.json if it does not exist 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Constructor and initialization > should initialize agents.json if it does not exist 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Constructor and initialization > should initialize metadata.json with required fields 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Constructor and initialization > should not recreate files if they already exist 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getConfig > should return default config when no global or project config exists 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getConfig > should return config with default values 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getConfig > should include all required config properties 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Config hierarchy and merging > should merge global config with defaults 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Config hierarchy and merging > should deeply merge nested objects 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Config hierarchy and merging > should preserve all default models when merging 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Config hierarchy and merging > should handle project config override of global config 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateGlobalConfig > should update global config and reload merged config 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateGlobalConfig > should preserve existing global config settings 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateGlobalConfig > should write updated config to file 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getMetadata > should return metadata when file exists 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getMetadata > should return null when metadata file does not exist 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > getMetadata > should handle JSON parse errors gracefully 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateMetadata > should update metadata and write to file 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateMetadata > should always update lastUpdated timestamp 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > updateMetadata > should preserve existing metadata when updating 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Error handling > should handle global config read errors gracefully 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × ConfigManager > Error handling > should handle JSON parse errors in global config 0ms
+     → Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/core/agent-manager.test.ts (39 tests | 39 failed) 23ms
+   × AgentManager > createAgent > should create agent with required properties 5ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should generate UUID for agent ID 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should set initial status to idle 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should set createdAt to ISO timestamp 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should set default model based on agent type 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should allow custom model override 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should set maxConcurrentTasks to 1 by default 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should allow custom maxConcurrentTasks 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should set timeout from global config by default 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should allow custom timeout override 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should throw error if agent with same name already exists 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should save agent to agents store 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > createAgent > should support different agent types 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > listAgents > should return empty array when no agents exist 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > listAgents > should return all global agents 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > listAgents > should merge global and project agents 2ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgent > should return agent by ID 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgent > should return null when agent ID not found 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgent > should handle multiple agents and find correct one 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgentByName > should return agent by name 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgentByName > should return null when agent name not found 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgentByName > should be case-sensitive 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > getAgentByName > should handle multiple agents and find correct one 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > deleteAgent > should delete agent by ID 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > deleteAgent > should delete agent by name 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > deleteAgent > should return false when agent does not exist 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > deleteAgent > should try ID first, then name 3ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > deleteAgent > should write to file after deletion 1ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgentStatus > should update agent status by ID 2ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgentStatus > should update agent status by name 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgentStatus > should update lastActivity timestamp 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgentStatus > should return false when agent not found 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgentStatus > should support all agent statuses 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgent > should update global agent 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > updateAgent > should write updated agent to file 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > Error handling and edge cases > should handle corrupted agents.json gracefully 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > Error handling and edge cases > should not lose data when file operations fail 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > Integration scenarios > should handle full agent lifecycle 1ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × AgentManager > Integration scenarios > should handle multiple agents with different types 1ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+TAP version 13
+stdout | .claude/hooks/lib/__tests__/statusline.test.cjs
+
+═══════════════════════════════════════════════════════
+TEST 1: Module Load Test
+═══════════════════════════════════════════════════════
+
+✓ colors.cjs exports required functions
+✓ transcript-parser.cjs exports required functions
+✓ config-counter.cjs exports required functions
+
+═══════════════════════════════════════════════════════
+TEST 2: Colors Test
+═══════════════════════════════════════════════════════
+
+✓ green() wraps text with color codes or returns plain text
+✓ yellow() returns valid output
+✓ red() returns valid output
+✓ cyan() returns valid output
+✓ magenta() returns valid output
+✓ dim() returns valid output
+✓ shouldUseColor is boolean
+
+═══════════════════════════════════════════════════════
+TEST 3: Context Color Thresholds
+═══════════════════════════════════════════════════════
+
+✓ getContextColor(50%) returns GREEN
+✓ getContextColor(75%) returns YELLOW
+✓ getContextColor(90%) returns RED
+✓ getContextColor(69%) returns GREEN (below 70%)
+✓ getContextColor(70%) returns YELLOW (exactly 70%)
+✓ getContextColor(85%) returns RED (exactly 85%)
+
+═══════════════════════════════════════════════════════
+TEST 4: Colored Bar Rendering
+═══════════════════════════════════════════════════════
+
+✓ coloredBar(0) renders empty bar
+✓ coloredBar(50) renders half-filled bar
+✓ coloredBar(100) renders full bar
+✓ coloredBar clamping: negative percent treated as 0
+✓ coloredBar clamping: >100 percent treated as 100
+✓ coloredBar respects custom width
+
+═══════════════════════════════════════════════════════
+TEST 5: Transcript Parser - Empty/Non-existent
+═══════════════════════════════════════════════════════
+
+✓ parseTranscript returns empty result for non-existent file
+✓ parseTranscript returns empty result for null path
+✓ parseTranscript returns empty result for undefined path
+
+═══════════════════════════════════════════════════════
+TEST 6: Transcript Parser - Real JSONL File
+═══════════════════════════════════════════════════════
+
+✓ parseTranscript reads valid JSONL file
+✓ parseTranscript tracks tools correctly
+✓ parseTranscript marks tool status correctly
+✓ parseTranscript tracks agents correctly
+✓ parseTranscript tracks todos correctly
+✓ parseTranscript extracts targets from tools
+
+═══════════════════════════════════════════════════════
+TEST 7: Extract Target Function
+═══════════════════════════════════════════════════════
+
+✓ extractTarget: Read tool
+✓ extractTarget: Write tool
+✓ extractTarget: Edit tool
+✓ extractTarget: Glob tool
+✓ extractTarget: Grep tool
+✓ extractTarget: Bash tool (short command)
+✓ extractTarget: Bash tool (long command truncated)
+✓ extractTarget: Unknown tool returns null
+✓ extractTarget: Null input returns null
+
+═══════════════════════════════════════════════════════
+TEST 8: Config Counter - Edge Cases
+═══════════════════════════════════════════════════════
+
+✓ countRulesInDir: returns 0 for non-existent directory
+✓ countRulesInDir: handles empty directory
+✓ countRulesInDir: counts .md files only
+✓ countRulesInDir: handles nested directories
+✓ countConfigs: returns object with expected properties
+✓ countConfigs: all counts are numbers
+✓ countConfigs: handles null/undefined cwd gracefully
+
+═══════════════════════════════════════════════════════
+TEST 9: Fallback Error Handling
+═══════════════════════════════════════════════════════
+
+✓ processEntry handles entry without timestamp
+✓ processEntry handles missing content array
+✓ processEntry handles malformed tool_result
+
+═══════════════════════════════════════════════════════
+TEST 10: Performance Test
+═══════════════════════════════════════════════════════
+
+✓ parseTranscript processes 100 entries <100ms
+✓ coloredBar(50, 12) renders in <1ms
+
+═══════════════════════════════════════════════════════
+TEST SUMMARY
+═══════════════════════════════════════════════════════
+
+Total Tests: 52
+Passed: 52
+Failed: 0
+
+✓ All tests passed!
+
+stdout | .claude/skills/markdown-novel-viewer/tests/dashboard-assets.test.cjs
+
+============================================================
+Dashboard Assets Tests
+============================================================
+
+TAP version 13
+# Subtest: context-builder.cjs
+    # Subtest: resolveRulesPath()
+        # Subtest: returns null when file does not exist anywhere
+        ok 1 - returns null when file does not exist anywhere
+          ---
+          duration_ms: 1.166791
+          ...
+        # Subtest: finds file in rules/ directory (new location)
+        ok 2 - finds file in rules/ directory (new location)
+          ---
+          duration_ms: 0.76275
+          ...
+        # Subtest: falls back to workflows/ when rules/ does not exist
+        ok 3 - falls back to workflows/ when rules/ does not exist
+          ---
+          duration_ms: 0.51225
+          ...
+        # Subtest: prefers rules/ over workflows/ when both exist
+        ok 4 - prefers rules/ over workflows/ when both exist
+          ---
+          duration_ms: 2.627833
+          ...
+        # Subtest: finds file in workflows/ when rules/ exists but file is only in workflows/
+        ok 5 - finds file in workflows/ when rules/ exists but file is only in workflows/
+          ---
+          duration_ms: 0.768541
+          ...
+        # Subtest: handles custom configDirName parameter
+        ok 6 - handles custom configDirName parameter
+          ---
+          duration_ms: 0.52125
+          ...
+        1..6
+    ok 1 - resolveRulesPath()
+      ---
+      duration_ms: 14.023167
+      type: 'suite'
+      ...
+    # Subtest: resolveWorkflowPath alias
+        # Subtest: resolveWorkflowPath is exported and callable
+        ok 1 - resolveWorkflowPath is exported and callable
+          ---
+          duration_ms: 0.103625
+          ...
+        # Subtest: resolveWorkflowPath is alias for resolveRulesPath
+        ok 2 - resolveWorkflowPath is alias for resolveRulesPath
+          ---
+          duration_ms: 0.046834
+          ...
+        # Subtest: resolveWorkflowPath works identically to resolveRulesPath
+        ok 3 - resolveWorkflowPath works identically to resolveRulesPath
+          ---
+          duration_ms: 1.236333
+          ...
+        1..3
+    ok 2 - resolveWorkflowPath alias
+      ---
+      duration_ms: 1.734
+      type: 'suite'
+      ...
+    # Subtest: Global path resolution
+        # Subtest: checks global ~/.claude/rules/ path
+        ok 1 - checks global ~/.claude/rules/ path
+          ---
+          duration_ms: 0.795083
+          ...
+        1..1
+    ok 3 - Global path resolution
+      ---
+      duration_ms: 1.10625
+      type: 'suite'
+      ...
+    # Subtest: buildReminderContext()
+        # Subtest: returns content, lines, and sections
+        ok 1 - returns content, lines, and sections
+          ---
+          duration_ms: 47.723584
+          ...
+        # Subtest: includes devRulesPath when rules/ exists
+        ok 2 - includes devRulesPath when rules/ exists
+          ---
+          duration_ms: 26.17875
+          ...
+        # Subtest: includes devRulesPath when only workflows/ exists (backward compat)
+        ok 3 - includes devRulesPath when only workflows/ exists (backward compat)
+          ---
+          duration_ms: 37.084209
+          ...
+        1..3
+    ok 4 - buildReminderContext()
+      ---
+      duration_ms: 114.767
+      type: 'suite'
+      ...
+    # Subtest: Section builders
+        # Subtest: buildSessionSection returns array of lines
+        ok 1 - buildSessionSection returns array of lines
+          ---
+          duration_ms: 0.558584
+          ...
+        # Subtest: buildRulesSection returns array with Rules header
+        ok 2 - buildRulesSection returns array with Rules header
+          ---
+          duration_ms: 0.074667
+          ...
+        # Subtest: buildModularizationSection returns array with Modularization
+        ok 3 - buildModularizationSection returns array with Modularization
+          ---
+          duration_ms: 0.060292
+          ...
+        # Subtest: buildPathsSection includes paths
+        ok 4 - buildPathsSection includes paths
+          ---
+          duration_ms: 0.068666
+          ...
+        # Subtest: buildNamingSection includes naming patterns
+        ok 5 - buildNamingSection includes naming patterns
+          ---
+          duration_ms: 0.044042
+          ...
+        1..5
+    ok 5 - Section builders
+      ---
+      duration_ms: 1.183459
+      type: 'suite'
+      ...
+    # Subtest: Export completeness
+        # Subtest: exports all required functions
+        ok 1 - exports all required functions
+          ---
+          duration_ms: 0.069084
+          ...
+        1..1
+    ok 6 - Export completeness
+      ---
+      duration_ms: 0.235083
+      type: 'suite'
+      ...
+    # Subtest: CLAUDE.md reference resolution
+        # Subtest: resolves @rules/ references correctly
+        ok 1 - resolves @rules/ references correctly
+          ---
+          duration_ms: 1.021084
+          ...
+        # Subtest: resolves legacy @workflows/ references via fallback
+        ok 2 - resolves legacy @workflows/ references via fallback
+          ---
+          duration_ms: 0.426458
+          ...
+        1..2
+    ok 7 - CLAUDE.md reference resolution
+      ---
+      duration_ms: 2.35325
+      type: 'suite'
+      ...
+    1..7
+ok 1 - context-builder.cjs
+  ---
+  duration_ms: 136.306084
+  type: 'suite'
+  ...
+stdout | .opencode/skill/markdown-novel-viewer/tests/dashboard-assets.test.cjs
+
+============================================================
+Dashboard Assets Tests
+============================================================
+
+stdout | .claude/skills/markdown-novel-viewer/tests/http-server.test.cjs
+
+============================================================
+HTTP Server Tests
+============================================================
+
+stdout | .opencode/skill/markdown-novel-viewer/tests/http-server.test.cjs
+
+============================================================
+HTTP Server Tests
+============================================================
+
+ ✓ .claude/skills/markdown-novel-viewer/tests/http-server.test.cjs (32 tests) 5ms
+ ✓ .opencode/skill/markdown-novel-viewer/tests/http-server.test.cjs (32 tests) 5ms
+ ✓ src/utils/validators.test.ts (39 tests) 7ms
+stdout | .claude/skills/markdown-novel-viewer/scripts/tests/server.test.cjs
+
+--- Port Finder Tests ---
+  ✓ DEFAULT_PORT is 3456
+  ✓ isPortAvailable returns boolean
+  ✓ findAvailablePort returns number
+
+--- Process Manager Tests ---
+  ✓ writePidFile and readPidFile work correctly
+  ✓ findRunningInstances returns array
+
+--- HTTP Server Tests ---
+  ✓ getMimeType returns correct types
+  ✓ MIME_TYPES has common extensions
+
+--- Security Tests ---
+  ✓ isPathSafe blocks path traversal
+  ✓ isPathSafe allows valid paths
+  ✓ sanitizeErrorMessage removes paths
+
+--- Markdown Renderer Tests ---
+  ✗ resolveImages converts relative paths
+    Error: Should include base path: expected to include "/base/path"
+  ✓ resolveImages preserves absolute URLs
+  ✗ resolveImages handles reference-style definitions
+    Error: Should resolve relative path: expected to include "/base/path/screenshots/step1.png"
+  ✗ resolveImages handles reference-style with titles
+    Error: Should resolve path with title: expected to include "/file/project/images/logo.png"
+  ✗ resolveImages handles inline images with titles
+    Error: Should resolve inline with title: expected to include "/file/base/image.png"
+  ✓ addHeadingIds adds id attributes
+  ✓ addHeadingIds handles duplicates
+  ✓ generateTOC extracts headings
+  ✓ renderTOCHtml generates list
+  ✓ renderTOCHtml handles empty array
+
+--- Plan Navigator Tests ---
+  ✓ detectPlan identifies plan directory
+  ✓ detectPlan returns false for non-plan
+  ✓ parsePlanTable extracts phases
+  ✓ getNavigationContext returns correct structure
+  ✓ generateNavSidebar returns HTML
+  ✓ generateNavSidebar returns empty for non-plan
+
+--- Test Results ---
+Passed: 22
+Failed: 4
+Total: 26
+
+ ❯ src/utils/paths.test.ts (22 tests | 8 failed) 13ms
+   ✓ Path Utilities > Global config paths > should return correct global config directory 1ms
+   ✓ Path Utilities > Global config paths > should return correct global config file path 0ms
+   ✓ Path Utilities > Global config paths > should return correct global agents file path 3ms
+   ✓ Path Utilities > Global config paths > should return correct global metadata file path 0ms
+   ✓ Path Utilities > Global config paths > should return correct global logs directory 0ms
+   ✓ Path Utilities > Global config paths > should return correct global agent logs directory 0ms
+   ✓ Path Utilities > Global config paths > should return correct global cache directory 0ms
+   ✓ Path Utilities > Global config paths > should return correct global session cache directory 0ms
+   ✓ Path Utilities > Project config paths > should return correct project config directory 0ms
+   × Path Utilities > Project config paths > should return null for project config path when project config does not exist 3ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > Project config paths > should return project config path when project config exists 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > Project config paths > should return null for project agents path when project config does not exist 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > Project config paths > should return project agents path when project config exists 1ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > hasProjectConfig > should return true when project config exists 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > hasProjectConfig > should return false when project config does not exist 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   × Path Utilities > hasProjectConfig > should check for .mindmux directory in current working directory 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   ✓ Path Utilities > Path hierarchy > should have global config dir containing all global files 0ms
+   ✓ Path Utilities > Path hierarchy > should have global cache dir as parent of session cache dir 0ms
+   ✓ Path Utilities > Path hierarchy > should have global logs dir as parent of agent logs dir 0ms
+   × Path Utilities > Path hierarchy > should have project config dir as parent of config file 0ms
+     → Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+   ✓ Path Utilities > Cross-platform compatibility > should use path.join for proper platform path separators 0ms
+   ✓ Path Utilities > Cross-platform compatibility > should work with homedir from os module 0ms
+ ✓ .claude/skills/sequential-thinking/tests/format-thought.test.js (10 tests) 4ms
+ ✓ .opencode/skill/sequential-thinking/tests/format-thought.test.js (10 tests) 3ms
+ ✓ .claude/skills/sequential-thinking/tests/process-thought.test.js (11 tests) 8ms
+ ✓ .opencode/skill/sequential-thinking/tests/process-thought.test.js (11 tests) 6ms
+TAP version 13
+TAP version 13
+# Subtest: parseSelector
+    # Subtest: CSS Selectors
+        # Subtest: should detect simple CSS selectors
+        ok 1 - should detect simple CSS selectors
+          ---
+          duration_ms: 2.31275
+          ...
+        # Subtest: should detect class selectors
+        ok 2 - should detect class selectors
+          ---
+          duration_ms: 0.073375
+          ...
+        # Subtest: should detect ID selectors
+        ok 3 - should detect ID selectors
+          ---
+          duration_ms: 0.050791
+          ...
+        # Subtest: should detect attribute selectors
+        ok 4 - should detect attribute selectors
+          ---
+          duration_ms: 0.056667
+          ...
+        # Subtest: should detect complex CSS selectors
+        ok 5 - should detect complex CSS selectors
+          ---
+          duration_ms: 0.052666
+          ...
+        1..5
+    ok 1 - CSS Selectors
+      ---
+      duration_ms: 3.458083
+      type: 'suite'
+      ...
+    # Subtest: XPath Selectors
+        # Subtest: should detect absolute XPath
+        ok 1 - should detect absolute XPath
+          ---
+          duration_ms: 0.1185
+          ...
+        # Subtest: should detect relative XPath
+        ok 2 - should detect relative XPath
+          ---
+          duration_ms: 0.148333
+          ...
+        # Subtest: should detect XPath with text matching
+        ok 3 - should detect XPath with text matching
+          ---
+          duration_ms: 0.04525
+          ...
+        # Subtest: should detect XPath with contains
+        ok 4 - should detect XPath with contains
+          ---
+          duration_ms: 0.133583
+          ...
+        # Subtest: should detect XPath with attributes
+        ok 5 - should detect XPath with attributes
+          ---
+          duration_ms: 0.1245
+          ...
+        # Subtest: should detect grouped XPath
+        ok 6 - should detect grouped XPath
+          ---
+          duration_ms: 0.116541
+          ...
+        1..6
+    ok 2 - XPath Selectors
+      ---
+      duration_ms: 1.007292
+      type: 'suite'
+      ...
+    # Subtest: Security Validation
+        # Subtest: should block javascript: injection
+        ok 1 - should block javascript: injection
+          ---
+          duration_ms: 0.281375
+          ...
+        # Subtest: should block <script tag injection
+        ok 2 - should block <script tag injection
+          ---
+          duration_ms: 0.197959
+          ...
+        # Subtest: should block onerror= injection
+        ok 3 - should block onerror= injection
+          ---
+          duration_ms: 0.072834
+          ...
+        # Subtest: should block onload= injection
+        ok 4 - should block onload= injection
+          ---
+          duration_ms: 6.0845
+          ...
+        # Subtest: should block onclick= injection
+        ok 5 - should block onclick= injection
+          ---
+          duration_ms: 0.280833
+          ...
+        # Subtest: should block eval( injection
+        ok 6 - should block eval( injection
+          ---
+          duration_ms: 0.093083
+          ...
+        # Subtest: should block Function( injection
+        ok 7 - should block Function( injection
+          ---
+          duration_ms: 0.202084
+          ...
+        # Subtest: should block constructor( injection
+        ok 8 - should block constructor( injection
+          ---
+          duration_ms: 0.099375
+          ...
+        # Subtest: should be case-insensitive for security checks
+        ok 9 - should be case-insensitive for security checks
+          ---
+          duration_ms: 0.07025
+          ...
+        # Subtest: should block extremely long selectors (DoS prevention)
+        ok 10 - should block extremely long selectors (DoS prevention)
+          ---
+          duration_ms: 0.077792
+          ...
+        1..10
+    ok 3 - Security Validation
+      ---
+      duration_ms: 9.8545
+      type: 'suite'
+      ...
+    # Subtest: Edge Cases
+        # Subtest: should throw on empty string
+        ok 1 - should throw on empty string
+          ---
+          duration_ms: 0.097041
+          ...
+        # Subtest: should throw on null
+        ok 2 - should throw on null
+          ---
+          duration_ms: 0.044833
+          ...
+        # Subtest: should throw on undefined
+        ok 3 - should throw on undefined
+          ---
+          duration_ms: 0.04225
+          ...
+        # Subtest: should throw on non-string input
+        ok 4 - should throw on non-string input
+          ---
+          duration_ms: 0.042417
+          ...
+        # Subtest: should handle selectors with special characters
+        ok 5 - should handle selectors with special characters
+          ---
+          duration_ms: 0.039625
+          ...
+        # Subtest: should allow safe XPath with parentheses
+        ok 6 - should allow safe XPath with parentheses
+          ---
+          duration_ms: 0.034666
+          ...
+        1..6
+    ok 4 - Edge Cases
+      ---
+      duration_ms: 0.432209
+      type: 'suite'
+      ...
+    # Subtest: Real-World Examples
+        # Subtest: should handle common button selector
+        ok 1 - should handle common button selector
+          ---
+          duration_ms: 0.061959
+          ...
+        # Subtest: should handle complex form selector
+        ok 2 - should handle complex form selector
+          ---
+          duration_ms: 0.033833
+          ...
+        # Subtest: should handle descendant selector
+        ok 3 - should handle descendant selector
+          ---
+          duration_ms: 0.034292
+          ...
+        # Subtest: should handle nth-child equivalent
+        ok 4 - should handle nth-child equivalent
+          ---
+          duration_ms: 0.032375
+          ...
+        1..4
+    ok 5 - Real-World Examples
+      ---
+      duration_ms: 0.344542
+      type: 'suite'
+      ...
+    1..5
+ok 1 - parseSelector
+  ---
+  duration_ms: 15.817291
+  type: 'suite'
+  ...
+TAP version 13
+# Subtest: parseSelector
+    # Subtest: CSS Selectors
+        # Subtest: should detect simple CSS selectors
+        ok 1 - should detect simple CSS selectors
+          ---
+          duration_ms: 2.228541
+          ...
+        # Subtest: should detect class selectors
+        ok 2 - should detect class selectors
+          ---
+          duration_ms: 0.070333
+          ...
+        # Subtest: should detect ID selectors
+        ok 3 - should detect ID selectors
+          ---
+          duration_ms: 0.050125
+          ...
+        # Subtest: should detect attribute selectors
+        ok 4 - should detect attribute selectors
+          ---
+          duration_ms: 0.052083
+          ...
+        # Subtest: should detect complex CSS selectors
+        ok 5 - should detect complex CSS selectors
+          ---
+          duration_ms: 0.049667
+          ...
+        1..5
+    ok 1 - CSS Selectors
+      ---
+      duration_ms: 3.331125
+      type: 'suite'
+      ...
+    # Subtest: XPath Selectors
+        # Subtest: should detect absolute XPath
+        ok 1 - should detect absolute XPath
+          ---
+          duration_ms: 0.112625
+          ...
+        # Subtest: should detect relative XPath
+        ok 2 - should detect relative XPath
+          ---
+          duration_ms: 0.149958
+          ...
+        # Subtest: should detect XPath with text matching
+        ok 3 - should detect XPath with text matching
+          ---
+          duration_ms: 0.044291
+          ...
+        # Subtest: should detect XPath with contains
+        ok 4 - should detect XPath with contains
+          ---
+          duration_ms: 0.1305
+          ...
+        # Subtest: should detect XPath with attributes
+        ok 5 - should detect XPath with attributes
+          ---
+          duration_ms: 0.122083
+          ...
+        # Subtest: should detect grouped XPath
+        ok 6 - should detect grouped XPath
+          ---
+          duration_ms: 0.114958
+          ...
+        1..6
+    ok 2 - XPath Selectors
+      ---
+      duration_ms: 0.985417
+      type: 'suite'
+      ...
+    # Subtest: Security Validation
+        # Subtest: should block javascript: injection
+        ok 1 - should block javascript: injection
+          ---
+          duration_ms: 0.280625
+          ...
+        # Subtest: should block <script tag injection
+        ok 2 - should block <script tag injection
+          ---
+          duration_ms: 0.201208
+          ...
+        # Subtest: should block onerror= injection
+        ok 3 - should block onerror= injection
+          ---
+          duration_ms: 0.072417
+          ...
+        # Subtest: should block onload= injection
+        ok 4 - should block onload= injection
+          ---
+          duration_ms: 0.066917
+          ...
+        # Subtest: should block onclick= injection
+        ok 5 - should block onclick= injection
+          ---
+          duration_ms: 0.153333
+          ...
+        # Subtest: should block eval( injection
+        ok 6 - should block eval( injection
+          ---
+          duration_ms: 0.065959
+          ...
+        # Subtest: should block Function( injection
+        ok 7 - should block Function( injection
+          ---
+          duration_ms: 0.185334
+          ...
+        # Subtest: should block constructor( injection
+        ok 8 - should block constructor( injection
+          ---
+          duration_ms: 0.076084
+          ...
+        # Subtest: should be case-insensitive for security checks
+        ok 9 - should be case-insensitive for security checks
+          ---
+          duration_ms: 0.060416
+          ...
+        # Subtest: should block extremely long selectors (DoS prevention)
+        ok 10 - should block extremely long selectors (DoS prevention)
+          ---
+          duration_ms: 0.068583
+          ...
+        1..10
+    ok 3 - Security Validation
+      ---
+      duration_ms: 1.58825
+      type: 'suite'
+      ...
+    # Subtest: Edge Cases
+        # Subtest: should throw on empty string
+        ok 1 - should throw on empty string
+          ---
+          duration_ms: 0.082042
+          ...
+        # Subtest: should throw on null
+        ok 2 - should throw on null
+          ---
+          duration_ms: 0.041625
+          ...
+        # Subtest: should throw on undefined
+        ok 3 - should throw on undefined
+          ---
+          duration_ms: 0.040292
+          ...
+        # Subtest: should throw on non-string input
+        ok 4 - should throw on non-string input
+          ---
+          duration_ms: 0.042208
+          ...
+        # Subtest: should handle selectors with special characters
+        ok 5 - should handle selectors with special characters
+          ---
+          duration_ms: 0.032959
+          ...
+        # Subtest: should allow safe XPath with parentheses
+        ok 6 - should allow safe XPath with parentheses
+          ---
+          duration_ms: 0.031125
+          ...
+        1..6
+    ok 4 - Edge Cases
+      ---
+      duration_ms: 0.389
+      type: 'suite'
+      ...
+    # Subtest: Real-World Examples
+        # Subtest: should handle common button selector
+        ok 1 - should handle common button selector
+          ---
+          duration_ms: 0.0575
+          ...
+        # Subtest: should handle complex form selector
+        ok 2 - should handle complex form selector
+          ---
+          duration_ms: 0.0315
+          ...
+        # Subtest: should handle descendant selector
+        ok 3 - should handle descendant selector
+          ---
+          duration_ms: 0.030334
+          ...
+        # Subtest: should handle nth-child equivalent
+        ok 4 - should handle nth-child equivalent
+          ---
+          duration_ms: 0.031875
+          ...
+        1..4
+    ok 5 - Real-World Examples
+      ---
+      duration_ms: 0.324375
+      type: 'suite'
+      ...
+    1..5
+ok 1 - parseSelector
+  ---
+  duration_ms: 7.29575
+  type: 'suite'
+  ...
+TAP version 13
+stdout | .opencode/skill/markdown-novel-viewer/scripts/tests/server.test.cjs
+
+--- Port Finder Tests ---
+  ✓ DEFAULT_PORT is 3456
+  ✓ isPortAvailable returns boolean
+  ✓ findAvailablePort returns number
+
+--- Process Manager Tests ---
+  ✓ writePidFile and readPidFile work correctly
+  ✓ findRunningInstances returns array
+
+--- HTTP Server Tests ---
+  ✓ getMimeType returns correct types
+  ✓ MIME_TYPES has common extensions
+
+--- Security Tests ---
+  ✓ isPathSafe blocks path traversal
+  ✓ isPathSafe allows valid paths
+  ✓ sanitizeErrorMessage removes paths
+
+--- Markdown Renderer Tests ---
+  ✗ resolveImages converts relative paths
+    Error: Should include base path: expected to include "/base/path"
+  ✓ resolveImages preserves absolute URLs
+  ✗ resolveImages handles reference-style definitions
+    Error: Should resolve relative path: expected to include "/base/path/screenshots/step1.png"
+  ✗ resolveImages handles reference-style with titles
+    Error: Should resolve path with title: expected to include "/file/project/images/logo.png"
+  ✗ resolveImages handles inline images with titles
+    Error: Should resolve inline with title: expected to include "/file/base/image.png"
+  ✓ addHeadingIds adds id attributes
+  ✓ addHeadingIds handles duplicates
+  ✓ generateTOC extracts headings
+  ✓ renderTOCHtml generates list
+  ✓ renderTOCHtml handles empty array
+
+--- Plan Navigator Tests ---
+  ✓ detectPlan identifies plan directory
+  ✓ detectPlan returns false for non-plan
+  ✓ parsePlanTable extracts phases
+  ✓ getNavigationContext returns correct structure
+  ✓ generateNavSidebar returns HTML
+  ✓ generateNavSidebar returns empty for non-plan
+
+--- Test Results ---
+Passed: 22
+Failed: 4
+Total: 26
+
+stdout | .claude/hooks/lib/__tests__/ck-config-utils.test.cjs
+
+=== normalizePath tests ===
+
+✓ trailing slashes: "plans///" → "plans"
+✓ trailing slashes: "my-plans///" → "my-plans"
+✓ empty paths: "   " → null
+✓ empty string → null
+✓ null → null
+✓ undefined → null
+✓ whitespace around path trimmed
+
+=== isAbsolutePath tests ===
+
+✓ absolute path: "/tmp/all-plans" → true
+✓ relative path: "plans" → false
+✓ relative path: "./plans" → false
+✓ Windows absolute: "C:\Users" → true (Linux: false)
+✓ empty → false
+
+=== sanitizePath tests ===
+
+✓ path traversal: "../../../tmp" → null (blocked)
+✓ absolute path respected: "/tmp/all-plans"
+✓ relative path within project returns normalized relative
+✓ null byte injection blocked
+
+=== sanitizeSlug tests ===
+
+✓ invalid filename chars removed: <, >, :, ", etc.
+✓ control chars removed
+✓ length limited to 100 chars
+✓ empty slug returns empty (caller handles fallback)
+
+=== validateNamingPattern tests ===
+
+✓ valid pattern with {slug}
+✓ pattern without {slug} → invalid
+✓ empty pattern → invalid
+✓ unresolved placeholder → invalid
+
+=== getGitRoot tests (Issue #291) ===
+
+✓ getGitRoot returns path when in git repo
+
+=== getReportsPath with baseDir tests (Issue #291) ===
+
+✓ getReportsPath returns absolute path when baseDir provided
+✓ getReportsPath returns relative path when no baseDir
+✓ getReportsPath uses plan path for session-resolved plans
+✓ getReportsPath ignores plan path for branch-resolved plans
+
+=== getGitRoot/getGitBranch with cwd parameter (Issue #291) ===
+
+✓ getGitRoot accepts cwd parameter
+✓ getGitRoot with subdirectory cwd returns same root
+✓ getGitRoot returns null for non-git directory
+✓ getGitBranch accepts cwd parameter
+
+=== escapeShellValue tests (Security) ===
+
+✓ escapeShellValue escapes backslashes
+✓ escapeShellValue escapes double quotes
+✓ escapeShellValue escapes dollar signs
+✓ escapeShellValue escapes backticks (Issue #291)
+✓ escapeShellValue handles mixed special chars
+✓ escapeShellValue returns non-string as-is
+
+=== getReportsPath edge cases ===
+
+✓ getReportsPath with empty reportsDir falls back to "reports"
+✓ getReportsPath with null reportsDir falls back to "reports"
+✓ getReportsPath with empty plansDir falls back to "plans"
+✓ getReportsPath with null plansDir falls back to "plans"
+
+=== sanitizeConfig tests ===
+
+✓ absolute path in config preserved through sanitization
+✓ mixed absolute/relative paths preserved independently
+
+=== isAbsolutePath edge cases ===
+
+✓ UNC path on Windows: "\\\\server\\share" (platform-conditional)
+✓ path.join concatenates paths (does NOT discard baseDir)
+
+=== Detached HEAD state tests ===
+
+✓ getGitBranch returns null or empty in detached HEAD state
+✗ getGitRoot works in detached HEAD state
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-detached-root-1768739730551"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-detached-root-1768739730551"
+
+=== Bare repository tests ===
+
+✓ getGitRoot returns null for bare repository (no working tree)
+✓ getGitBranch returns null for bare repository (no HEAD ref)
+
+=== Nested git repos tests ===
+
+✗ getGitRoot returns innermost repo for nested git repos
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-nested-outer-1768739730826/inner"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-nested-outer-1768739730826/inner"
+✗ getGitRoot from nested subdir returns correct root
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-nested-sub-1768739730883/inner"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-nested-sub-1768739730883/inner"
+
+=== Symlinked directory tests ===
+
+✓ getGitRoot resolves through symlink to git repo
+✓ getGitRoot with symlinked subdirectory
+
+=== Git worktree tests ===
+
+✗ getGitRoot works with git worktree
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-wt-tree-1768739731016"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-wt-tree-1768739731016"
+
+=== Unicode path tests ===
+
+✗ getGitRoot works with unicode characters in path
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-日本語-émoji-🔥-1768739731176"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-日本語-émoji-🔥-1768739731176"
+✓ getGitBranch works with unicode branch name
+
+=== Special character path tests ===
+
+✗ getGitRoot works with special shell characters in path
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-special-$var-'quote'-1768739731330"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-special-$var-'quote'-1768739731330"
+
+=== Empty/new git repo tests ===
+
+✗ getGitRoot works on new repo with no commits
+  Error: 
+  Expected: "/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-empty-repo-1768739731361"
+  Actual: "/private/var/folders/sr/8lcdv7jn3m961kqqjpy284p00000gp/T/ck-test-empty-repo-1768739731361"
+✓ getGitBranch on new repo returns default branch
+
+=== resolvePlanPath with sessionOrigin tests (Issue #335) ===
+
+✓ resolvePlanPath returns absolute path as-is (Issue #335)
+✓ resolvePlanPath resolves relative path using sessionOrigin (Issue #335)
+✓ resolvePlanPath without sessionOrigin uses relative path as-is
+  → Skipped: Windows-only test
+✓ resolvePlanPath handles Windows-style paths on Windows
+✓ resolvePlanPath falls back to branch if no session state
+
+=== Summary ===
+
+Passed: 59
+Failed: 7
+Total: 66
+
+stdout | .claude/hooks/lib/__tests__/statusline-integration.test.cjs
+
+═══════════════════════════════════════════════════════
+STATUSLINE INTEGRATION TESTS
+═══════════════════════════════════════════════════════
+
+TEST 1: Basic JSON Input (Minimal)
+
+✓ Minimal input produces output
+✓ Minimal output contains model name
+✓ Minimal output contains directory
+  Output: [0m🤖 Claude  [32m▰▰▰[2m▱▱▱▱▱▱▱▱▱[0m 23%  ⌛ 0h 24m left (33% used)
+[0m📁 /home/user/project  🌿...
+
+TEST 2: JSON with Git Info
+
+  Skipped (expected in some environments): Command failed: echo '{"model":{"display_name":"Claude-3"},"
+✓ Git input processed without error
+
+TEST 3: JSON with Context Window
+
+✓ Context window data processed
+✓ Output includes percentage indicator
+  Output: [0m🤖 Claude  [32m▰▰▰▰▰▰[2m▱▱▱▱▱▱[0m 48%  ⌛ 0h 24m left (33% used)
+[0m📁 /home/user  🌿 main...
+
+TEST 4: JSON with Cost Info
+
+✓ Cost info displayed in API mode
+✓ Output includes line changes
+  Output: [0m🤖 Claude  [32m▰▰▰[2m▱▱▱▱▱▱▱▱▱[0m 23%  ⌛ 0h 24m left (33% used)
+[0m📁 /home/user  🌿 main
+[...
+
+TEST 5: Invalid JSON Handling
+
+✓ Invalid JSON produces fallback output
+  Output: 📁 /Users/nicosys/repo-personal/mindmux
+
+TEST 6: Empty Input Handling
+
+  Handled error (expected): Exit code 1
+✓ Empty input handled
+
+TEST 7: Multi-line Output Format
+
+✓ Multi-line output generates content
+✓ Output contains session line
+✓ Output has multiple lines
+  Output lines: 3
+  Sample: [0m🤖 Claude-Opus  [33m▰▰▰▰▰▰▰▰▰[2m▱▱▱[0m 73%  ⌛ 0h 24m left (33% used)...
+
+TEST 8: Home Directory Expansion
+
+✓ Home directory expanded to tilde
+  Output: [0m🤖 Claude  [32m▰▰▰[2m▱▱▱▱▱▱▱▱▱[0m 23%  ⌛ 0h 24m left (33% used)
+[0m📁 ~/projects/test  🌿 ma...
+
+TEST 9: Colors and NO_COLOR Support
+
+✓ NO_COLOR=1 produces output
+✓ NO_COLOR output should be plain text
+  Output: 🤖 Claude  ▰▰▰▱▱▱▱▱▱▱▱▱ 23%  ⌛ 0h 24m left (33% used)
+📁 /home/user  🌿 main...
+
+TEST 10: Wide Terminal Rendering (160+ cols)
+
+✓ Wide terminal (160 cols) produces output
+✓ Wide terminal has fewer lines (compact layout)
+  Lines: 1
+  Output: [0m🤖 Opus 4.5  [32m▰▰▰▰▰▰[2m▱▱▱▱▱▱[0m 48%  ⌛ 0h 24m left (33% used)  📁 /home/user/short  🌿 ma...
+
+TEST 11: Narrow Terminal Wrapping (< 100 cols)
+
+✓ Narrow terminal (80 cols) produces output
+✓ Narrow terminal wraps to multiple lines
+  Lines: 3
+✓ Narrow has more lines than wide
+
+TEST 12: Long Directory/Branch Names
+
+✓ Long path produces output without crash
+✓ Long path contains directory info
+  Lines: 2
+  Output: [0m🤖 Claude  [32m▰▰▰[2m▱▱▱▱▱▱▱▱▱[0m 23%  ⌛ 0h 24m left (33% used)...
+
+TEST 13: Long Model Names
+
+✓ Long model name produces output
+✓ Long model name is truncated (not overflow)
+  Output: [0m🤖 gemini-claude-opus-4-5-thinking-extended-context  [32m▰▰▰▰▰▰[2m▱▱▱▱▱▱[...
+
+TEST 14: Agent/Todo Tracking Display
+
+✓ Agent/Todo tracking produces output
+✓ Agent tracking shows completed agent
+✓ Todo tracking shows in-progress task
+  Agent/Todo output:
+    [0m🤖 Opus 4.5  [32m▰▰▰[2m▱▱▱▱▱▱▱▱▱[0m 23%  ⌛ 0h 24m left (33% used)
+    [0m📁 /home/user/project  🌿 main
+    [0m[2m○[0m researcher
+    [0m   [2m▸[0m Researching API docs [2m(1m 0s)[0m
+    [0m[33m▸[0m Working on second task [2m(1 done, 1 pending)[0m
+
+TEST 15: Edge Cases - Boundary Conditions
+
+✓ Zero context produces output
+✓ Very narrow terminal (40 cols) handles gracefully
+  40-col lines: 4
+
+═══════════════════════════════════════════════════════
+INTEGRATION TEST SUMMARY
+═══════════════════════════════════════════════════════
+
+Total Tests: 30
+Passed: 30
+Failed: 0
+
+✓ All integration tests passed!
+
+stdout | .opencode/scripts/worktree.test.cjs
+
+📋 INFO Command Tests
+  ✓ info returns valid JSON
+  ✓ info detects repo type
+  ✓ info detects base branch
+  ✓ info finds env files
+  ✓ info detects dirty state
+  ✓ info detects monorepo from monorepo root
+  ✓ info returns text output without --json
+
+📂 LIST Command Tests
+  ✓ list returns valid JSON
+  ✓ list worktrees have required fields
+  ✓ list returns text output without --json
+
+🆕 CREATE Command Tests
+  ✓ create requires feature name
+  ✓ create dry-run does not create worktree
+  ✓ create dry-run shows correct branch name
+  ✓ create sanitizes feature name - spaces
+  ✓ create sanitizes feature name - uppercase
+  ✓ create sanitizes feature name - special chars
+  ✓ create respects --prefix flag
+  ✓ create shows base branch
+  ✓ create shows worktree path
+  ✓ create in monorepo requires project
+  ✓ create in monorepo with project works
+  ✓ create detects invalid project
+
+🗑️  REMOVE Command Tests
+  ✓ remove requires worktree name
+  ✓ remove dry-run does not remove worktree
+  ✓ remove handles not found
+  ✓ remove error includes available worktrees
+
+🤖 Auto-Features Tests
+  ✓ create dry-run succeeds
+
+⚠️  Error Handling Tests
+  ✓ unknown command returns error
+  ✓ no command returns error
+  ✓ errors have suggestion field
+  ✓ success commands return exit code 0
+  ✓ error commands return exit code 1
+  ✓ non-git directory returns error
+
+==================================================
+
+📊 Test Results: 33 passed, 0 failed
+
+✅ All tests passed!
+
+
+stdout | .claude/scripts/worktree.test.cjs
+
+📋 INFO Command Tests
+  ✓ info returns valid JSON
+  ✓ info detects repo type
+  ✓ info detects base branch
+  ✓ info finds env files
+  ✓ info detects dirty state
+  ✓ info detects monorepo from monorepo root
+  ✓ info returns text output without --json
+
+📂 LIST Command Tests
+  ✓ list returns valid JSON
+  ✓ list worktrees have required fields
+  ✓ list returns text output without --json
+
+🆕 CREATE Command Tests
+  ✓ create requires feature name
+  ✓ create dry-run does not create worktree
+  ✓ create dry-run shows correct branch name
+  ✓ create sanitizes feature name - spaces
+  ✓ create sanitizes feature name - uppercase
+  ✓ create sanitizes feature name - special chars
+  ✓ create respects --prefix flag
+  ✓ create shows base branch
+  ✓ create shows worktree path
+  ✓ create in monorepo requires project
+  ✓ create in monorepo with project works
+  ✓ create detects invalid project
+
+🗑️  REMOVE Command Tests
+  ✓ remove requires worktree name
+  ✓ remove dry-run does not remove worktree
+  ✓ remove handles not found
+  ✓ remove error includes available worktrees
+
+🤖 Auto-Features Tests
+  ✓ create dry-run succeeds
+
+⚠️  Error Handling Tests
+  ✓ unknown command returns error
+  ✓ no command returns error
+  ✓ errors have suggestion field
+  ✓ success commands return exit code 0
+  ✓ error commands return exit code 1
+  ✓ non-git directory returns error
+
+==================================================
+
+📊 Test Results: 33 passed, 0 failed
+
+✅ All tests passed!
+
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 22 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  .claude/scripts/worktree.test.cjs [ .claude/scripts/worktree.test.cjs ]
+Error: process.exit unexpectedly called with "0"
+ ❯ .claude/scripts/worktree.test.cjs:345:11
+    343| } else {
+    344|   console.log('✅ All tests passed!\n');
+    345|   process.exit(0);
+       |           ^
+    346| }
+    347| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/93]⎯
+
+ FAIL  .opencode/scripts/worktree.test.cjs [ .opencode/scripts/worktree.test.cjs ]
+Error: process.exit unexpectedly called with "0"
+ ❯ .opencode/scripts/worktree.test.cjs:345:11
+    343| } else {
+    344|   console.log('✅ All tests passed!\n');
+    345|   process.exit(0);
+       |           ^
+    346| }
+    347| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/93]⎯
+
+ FAIL  .claude/hooks/__tests__/ck-config-utils.test.cjs [ .claude/hooks/__tests__/ck-config-utils.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/ck-config-utils.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/93]⎯
+
+ FAIL  .claude/hooks/__tests__/dev-rules-reminder.test.cjs [ .claude/hooks/__tests__/dev-rules-reminder.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/dev-rules-reminder.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/93]⎯
+
+ FAIL  .claude/hooks/__tests__/privacy-block.test.cjs [ .claude/hooks/__tests__/privacy-block.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/privacy-block.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/93]⎯
+
+ FAIL  .claude/hooks/__tests__/session-init.test.cjs [ .claude/hooks/__tests__/session-init.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/session-init.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/93]⎯
+
+ FAIL  .claude/hooks/__tests__/subagent-init.test.cjs [ .claude/hooks/__tests__/subagent-init.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/subagent-init.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/93]⎯
+
+ FAIL  .claude/hooks/__tests__/integration/path-resolution.test.cjs [ .claude/hooks/__tests__/integration/path-resolution.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/__tests__/integration/path-resolution.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/93]⎯
+
+ FAIL  .claude/hooks/lib/__tests__/ck-config-utils.test.cjs [ .claude/hooks/lib/__tests__/ck-config-utils.test.cjs ]
+Error: process.exit unexpectedly called with "1"
+ ❯ .claude/hooks/lib/__tests__/ck-config-utils.test.cjs:780:11
+    778| 
+    779| if (failed > 0) {
+    780|   process.exit(1);
+       |           ^
+    781| }
+    782| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/93]⎯
+
+ FAIL  .claude/hooks/lib/__tests__/context-builder.test.cjs [ .claude/hooks/lib/__tests__/context-builder.test.cjs ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/hooks/lib/__tests__/context-builder.test.cjs
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/93]⎯
+
+ FAIL  .claude/hooks/lib/__tests__/statusline-integration.test.cjs [ .claude/hooks/lib/__tests__/statusline-integration.test.cjs ]
+Error: process.exit unexpectedly called with "0"
+ ❯ .claude/hooks/lib/__tests__/statusline-integration.test.cjs:677:11
+    675| } else {
+    676|   console.log('\n✓ All integration tests passed!');
+    677|   process.exit(0);
+       |           ^
+    678| }
+    679| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/93]⎯
+
+ FAIL  .claude/hooks/lib/__tests__/statusline.test.cjs [ .claude/hooks/lib/__tests__/statusline.test.cjs ]
+Error: process.exit unexpectedly called with "0"
+ ❯ .claude/hooks/lib/__tests__/statusline.test.cjs:688:11
+    686| } else {
+    687|   console.log('\n✓ All tests passed!');
+    688|   process.exit(0);
+       |           ^
+    689| }
+    690| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/93]⎯
+
+ FAIL  .claude/skills/markdown-novel-viewer/tests/dashboard-assets.test.cjs [ .claude/skills/markdown-novel-viewer/tests/dashboard-assets.test.cjs ]
+ReferenceError: before is not defined
+ ❯ .claude/skills/markdown-novel-viewer/tests/dashboard-assets.test.cjs:18:3
+     16|   let htmlContent;
+     17| 
+     18|   before(() => {
+       |   ^
+     19|     assert(fs.existsSync(templatePath), `Template file not found: ${te…
+     20|     htmlContent = fs.readFileSync(templatePath, 'utf8');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/93]⎯
+
+ FAIL  .claude/skills/markdown-novel-viewer/tests/dashboard-renderer.test.cjs [ .claude/skills/markdown-novel-viewer/tests/dashboard-renderer.test.cjs ]
+Error: Cannot find module '../scripts/lib/dashboard-renderer.cjs'
+Require stack:
+- /Users/nicosys/repo-personal/mindmux/.claude/skills/markdown-novel-viewer/tests/dashboard-renderer.test.cjs
+ ❯ .claude/skills/markdown-novel-viewer/tests/dashboard-renderer.test.cjs:17:5
+     15|   escapeHtml,
+     16|   formatDate
+     17| } = require('../scripts/lib/dashboard-renderer.cjs');
+       |     ^
+     18| 
+     19| describe('escapeHtml', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/93]⎯
+
+ FAIL  .opencode/skill/markdown-novel-viewer/tests/dashboard-assets.test.cjs [ .opencode/skill/markdown-novel-viewer/tests/dashboard-assets.test.cjs ]
+ReferenceError: before is not defined
+ ❯ .opencode/skill/markdown-novel-viewer/tests/dashboard-assets.test.cjs:18:3
+     16|   let htmlContent;
+     17| 
+     18|   before(() => {
+       |   ^
+     19|     assert(fs.existsSync(templatePath), `Template file not found: ${te…
+     20|     htmlContent = fs.readFileSync(templatePath, 'utf8');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/93]⎯
+
+ FAIL  .opencode/skill/markdown-novel-viewer/tests/dashboard-renderer.test.cjs [ .opencode/skill/markdown-novel-viewer/tests/dashboard-renderer.test.cjs ]
+Error: Cannot find module '../scripts/lib/dashboard-renderer.cjs'
+Require stack:
+- /Users/nicosys/repo-personal/mindmux/.opencode/skill/markdown-novel-viewer/tests/dashboard-renderer.test.cjs
+ ❯ .opencode/skill/markdown-novel-viewer/tests/dashboard-renderer.test.cjs:17:5
+     15|   escapeHtml,
+     16|   formatDate
+     17| } = require('../scripts/lib/dashboard-renderer.cjs');
+       |     ^
+     18| 
+     19| describe('escapeHtml', () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/93]⎯
+
+ FAIL  .claude/skills/chrome-devtools/scripts/__tests__/error-handling.test.js [ .claude/skills/chrome-devtools/scripts/__tests__/error-handling.test.js ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/skills/chrome-devtools/scripts/__tests__/error-handling.test.js
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/93]⎯
+
+ FAIL  .claude/skills/chrome-devtools/scripts/__tests__/selector.test.js [ .claude/skills/chrome-devtools/scripts/__tests__/selector.test.js ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.claude/skills/chrome-devtools/scripts/__tests__/selector.test.js
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/93]⎯
+
+ FAIL  .claude/skills/markdown-novel-viewer/scripts/tests/server.test.cjs [ .claude/skills/markdown-novel-viewer/scripts/tests/server.test.cjs ]
+Error: process.exit unexpectedly called with "1"
+ ❯ .claude/skills/markdown-novel-viewer/scripts/tests/server.test.cjs:280:11
+    278| 
+    279| if (failed > 0) {
+    280|   process.exit(1);
+       |           ^
+    281| }
+    282| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/93]⎯
+
+ FAIL  .opencode/skill/chrome-devtools/scripts/__tests__/error-handling.test.js [ .opencode/skill/chrome-devtools/scripts/__tests__/error-handling.test.js ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.opencode/skill/chrome-devtools/scripts/__tests__/error-handling.test.js
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/93]⎯
+
+ FAIL  .opencode/skill/chrome-devtools/scripts/__tests__/selector.test.js [ .opencode/skill/chrome-devtools/scripts/__tests__/selector.test.js ]
+Error: No test suite found in file /Users/nicosys/repo-personal/mindmux/.opencode/skill/chrome-devtools/scripts/__tests__/selector.test.js
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/93]⎯
+
+ FAIL  .opencode/skill/markdown-novel-viewer/scripts/tests/server.test.cjs [ .opencode/skill/markdown-novel-viewer/scripts/tests/server.test.cjs ]
+Error: process.exit unexpectedly called with "1"
+ ❯ .opencode/skill/markdown-novel-viewer/scripts/tests/server.test.cjs:280:11
+    278| 
+    279| if (failed > 0) {
+    280|   process.exit(1);
+       |           ^
+    281| }
+    282| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/93]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 71 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should create agent with required properties
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should generate UUID for agent ID
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should set initial status to idle
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should set createdAt to ISO timestamp
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should set default model based on agent type
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should allow custom model override
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should set maxConcurrentTasks to 1 by default
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should allow custom maxConcurrentTasks
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should set timeout from global config by default
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should allow custom timeout override
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should throw error if agent with same name already exists
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should save agent to agents store
+ FAIL  src/core/agent-manager.test.ts > AgentManager > createAgent > should support different agent types
+ FAIL  src/core/agent-manager.test.ts > AgentManager > listAgents > should return empty array when no agents exist
+ FAIL  src/core/agent-manager.test.ts > AgentManager > listAgents > should return all global agents
+ FAIL  src/core/agent-manager.test.ts > AgentManager > listAgents > should merge global and project agents
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgent > should return agent by ID
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgent > should return null when agent ID not found
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgent > should handle multiple agents and find correct one
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgentByName > should return agent by name
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgentByName > should return null when agent name not found
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgentByName > should be case-sensitive
+ FAIL  src/core/agent-manager.test.ts > AgentManager > getAgentByName > should handle multiple agents and find correct one
+ FAIL  src/core/agent-manager.test.ts > AgentManager > deleteAgent > should delete agent by ID
+ FAIL  src/core/agent-manager.test.ts > AgentManager > deleteAgent > should delete agent by name
+ FAIL  src/core/agent-manager.test.ts > AgentManager > deleteAgent > should return false when agent does not exist
+ FAIL  src/core/agent-manager.test.ts > AgentManager > deleteAgent > should try ID first, then name
+ FAIL  src/core/agent-manager.test.ts > AgentManager > deleteAgent > should write to file after deletion
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgentStatus > should update agent status by ID
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgentStatus > should update agent status by name
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgentStatus > should update lastActivity timestamp
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgentStatus > should return false when agent not found
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgentStatus > should support all agent statuses
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgent > should update global agent
+ FAIL  src/core/agent-manager.test.ts > AgentManager > updateAgent > should write updated agent to file
+ FAIL  src/core/agent-manager.test.ts > AgentManager > Error handling and edge cases > should handle corrupted agents.json gracefully
+ FAIL  src/core/agent-manager.test.ts > AgentManager > Error handling and edge cases > should not lose data when file operations fail
+ FAIL  src/core/agent-manager.test.ts > AgentManager > Integration scenarios > should handle full agent lifecycle
+ FAIL  src/core/agent-manager.test.ts > AgentManager > Integration scenarios > should handle multiple agents with different types
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/core/agent-manager.test.ts:38:24
+     36| 
+     37|     // Mock fs operations
+     38|     existsSyncSpy = vi.spyOn(fs, 'existsSync');
+       |                        ^
+     39|     readFileSyncSpy = vi.spyOn(fs, 'readFileSync');
+     40|     writeFileSyncSpy = vi.spyOn(fs, 'writeFileSync').mockReturnValue(u…
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/core/agent-manager.test.ts:38:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/93]⎯
+
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should create config directories when they do not exist
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should create .gitignore in global config dir
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should initialize config.json if it does not exist
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should initialize agents.json if it does not exist
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should initialize metadata.json with required fields
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Constructor and initialization > should not recreate files if they already exist
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getConfig > should return default config when no global or project config exists
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getConfig > should return config with default values
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getConfig > should include all required config properties
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Config hierarchy and merging > should merge global config with defaults
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Config hierarchy and merging > should deeply merge nested objects
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Config hierarchy and merging > should preserve all default models when merging
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Config hierarchy and merging > should handle project config override of global config
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateGlobalConfig > should update global config and reload merged config
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateGlobalConfig > should preserve existing global config settings
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateGlobalConfig > should write updated config to file
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getMetadata > should return metadata when file exists
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getMetadata > should return null when metadata file does not exist
+ FAIL  src/core/config-manager.test.ts > ConfigManager > getMetadata > should handle JSON parse errors gracefully
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateMetadata > should update metadata and write to file
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateMetadata > should always update lastUpdated timestamp
+ FAIL  src/core/config-manager.test.ts > ConfigManager > updateMetadata > should preserve existing metadata when updating
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Error handling > should handle global config read errors gracefully
+ FAIL  src/core/config-manager.test.ts > ConfigManager > Error handling > should handle JSON parse errors in global config
+TypeError: Cannot spy on export "mkdirSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/core/config-manager.test.ts:34:23
+     32| 
+     33|   beforeEach(() => {
+     34|     mkdirSyncSpy = vi.spyOn(fs, 'mkdirSync').mockReturnValue(undefined…
+       |                       ^
+     35|     existsSyncSpy = vi.spyOn(fs, 'existsSync');
+     36|     readFileSyncSpy = vi.spyOn(fs, 'readFileSync');
+
+Caused by: TypeError: Cannot redefine property: mkdirSync
+ ❯ src/core/config-manager.test.ts:34:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > Project config paths > should return null for project config path when project config does not exist
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:84:10
+     82| 
+     83|     it('should return null for project config path when project config…
+     84|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(false);
+       |          ^
+     85|       const path = getProjectConfigPath();
+     86|       expect(path).toBeNull();
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:84:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > Project config paths > should return project config path when project config exists
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:91:10
+     89| 
+     90|     it('should return project config path when project config exists',…
+     91|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(true);
+       |          ^
+     92|       const path = getProjectConfigPath();
+     93|       expect(path).toBe(join(process.cwd(), '.mindmux', 'config.json')…
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:91:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > Project config paths > should return null for project agents path when project config does not exist
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:98:10
+     96| 
+     97|     it('should return null for project agents path when project config…
+     98|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(false);
+       |          ^
+     99|       const path = getProjectAgentsPath();
+    100|       expect(path).toBeNull();
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:98:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > Project config paths > should return project agents path when project config exists
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:105:10
+    103| 
+    104|     it('should return project agents path when project config exists',…
+    105|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(true);
+       |          ^
+    106|       const path = getProjectAgentsPath();
+    107|       expect(path).toBe(join(process.cwd(), '.mindmux', 'agents.json')…
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:105:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > hasProjectConfig > should return true when project config exists
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:114:10
+    112|   describe('hasProjectConfig', () => {
+    113|     it('should return true when project config exists', () => {
+    114|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(true);
+       |          ^
+    115|       const has = hasProjectConfig();
+    116|       expect(has).toBe(true);
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:114:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > hasProjectConfig > should return false when project config does not exist
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:121:10
+    119| 
+    120|     it('should return false when project config does not exist', () =>…
+    121|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(false);
+       |          ^
+    122|       const has = hasProjectConfig();
+    123|       expect(has).toBe(false);
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:121:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > hasProjectConfig > should check for .mindmux directory in current working directory
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:128:32
+    126| 
+    127|     it('should check for .mindmux directory in current working directo…
+    128|       const existsSyncSpy = vi.spyOn(fs, 'existsSync');
+       |                                ^
+    129|       hasProjectConfig();
+    130|       expect(existsSyncSpy).toHaveBeenCalledWith(join(process.cwd(), '…
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:128:32
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/93]⎯
+
+ FAIL  src/utils/paths.test.ts > Path Utilities > Path hierarchy > should have project config dir as parent of config file
+TypeError: Cannot spy on export "existsSync". Module namespace is not configurable in ESM. See: https://vitest.dev/guide/browser/#limitations
+ ❯ src/utils/paths.test.ts:158:10
+    156| 
+    157|     it('should have project config dir as parent of config file', () =…
+    158|       vi.spyOn(fs, 'existsSync').mockReturnValueOnce(true);
+       |          ^
+    159|       const projectDir = getProjectConfigDir();
+    160|       const configPath = getProjectConfigPath();
+
+Caused by: TypeError: Cannot redefine property: existsSync
+ ❯ src/utils/paths.test.ts:158:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/93]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 4 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Should track at least 2 tools
+  Expected: true, got: false
+ ❯ assertTrue .claude/hooks/lib/__tests__/statusline.test.cjs:68:11
+     66| function assertTrue(condition, msg = '') {
+     67|   if (!condition) {
+     68|     throw new Error(`${msg}\n  Expected: true, got: ${condition}`);
+       |           ^
+     69|   }
+     70| }
+ ❯ .claude/hooks/lib/__tests__/statusline.test.cjs:383:3
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in ".claude/hooks/lib/__tests__/statusline.test.cjs" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Should have at least one completed tool
+  Expected: true, got: false
+ ❯ assertTrue .claude/hooks/lib/__tests__/statusline.test.cjs:68:11
+     66| function assertTrue(condition, msg = '') {
+     67|   if (!condition) {
+     68|     throw new Error(`${msg}\n  Expected: true, got: ${condition}`);
+       |           ^
+     69|   }
+     70| }
+ ❯ .claude/hooks/lib/__tests__/statusline.test.cjs:392:3
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in ".claude/hooks/lib/__tests__/statusline.test.cjs" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Should track agents
+  Expected: true, got: false
+ ❯ assertTrue .claude/hooks/lib/__tests__/statusline.test.cjs:68:11
+     66| function assertTrue(condition, msg = '') {
+     67|   if (!condition) {
+     68|     throw new Error(`${msg}\n  Expected: true, got: ${condition}`);
+       |           ^
+     69|   }
+     70| }
+ ❯ .claude/hooks/lib/__tests__/statusline.test.cjs:397:3
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in ".claude/hooks/lib/__tests__/statusline.test.cjs" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: Should track todos
+  Expected: true, got: false
+ ❯ assertTrue .claude/hooks/lib/__tests__/statusline.test.cjs:68:11
+     66| function assertTrue(condition, msg = '') {
+     67|   if (!condition) {
+     68|     throw new Error(`${msg}\n  Expected: true, got: ${condition}`);
+       |           ^
+     69|   }
+     70| }
+ ❯ .claude/hooks/lib/__tests__/statusline.test.cjs:405:3
+ ❯ processTicksAndRejections node:internal/process/task_queues:95:5
+
+This error originated in ".claude/hooks/lib/__tests__/statusline.test.cjs" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  25 failed | 7 passed (32)
+      Tests  71 failed | 159 passed (230)
+     Errors  4 errors
+   Start at  21:35:29
+   Duration  5.26s (transform 662ms, setup 0ms, collect 998ms, tests 87ms, environment 4ms, prepare 2.24s)
+
