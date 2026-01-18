@@ -1,76 +1,89 @@
 /**
- * Task Executor
- * Executes AI tasks on agents with streaming output to tmux sessions
+ * Task Executor (REVISED)
+ * Executes tasks by sending prompts to CLI tools via tmux
  */
 
-import { AIProviderFactory } from '../providers/factory';
 import { TmuxController } from './tmux-controller';
+import { CLIAdapterFactory } from '../adapters/cli-adapter-factory';
 import { Agent, Task } from './types';
 
 export class TaskExecutor {
-  constructor(private tmuxController: TmuxController) {}
+  private adapterFactory: CLIAdapterFactory;
+
+  constructor(private tmuxController: TmuxController) {
+    this.adapterFactory = new CLIAdapterFactory(tmuxController);
+  }
 
   /**
-   * Execute a task on an agent with streaming output
+   * Execute a task on an agent via CLI
    */
   async executeTask(agent: Agent, task: Task): Promise<string> {
+    if (!agent.sessionName || !agent.isRunning) {
+      throw new Error(`Agent ${agent.name} is not running`);
+    }
+
     try {
-      const provider = AIProviderFactory.create(agent.type, agent.config);
+      // Get CLI adapter for agent type
+      const adapter = this.adapterFactory.create(agent.type, agent.config);
 
-      // Ensure agent has an active session
-      if (!agent.sessionName || !agent.isRunning) {
-        throw new Error(`Agent ${agent.name} is not running`);
-      }
-
-      const sessionName = agent.sessionName;
-      let fullResponse = '';
-
-      // Clear previous output
-      await this.tmuxController.sendCommand(sessionName, 'clear');
-
-      // Show task info
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Task ID: ${task.id}"`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Prompt: ${task.prompt.substring(0, 100)}..."`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        'echo "---"'
-      );
-
-      // Stream AI response to tmux session
-      await provider.stream(
+      // Send prompt and wait for response
+      const response = await adapter.sendPrompt(
+        agent.sessionName,
         task.prompt,
-        (chunk: string) => {
-          fullResponse += chunk;
-          // Escape special characters for shell
-          const escapedChunk = chunk.replace(/"/g, '\\"').replace(/\$/g, '\\$');
-          this.tmuxController.sendCommand(sessionName, `printf "%s" "${escapedChunk}"`);
+        {
+          workDir: process.cwd(),
+          timeout: task.timeout || 300000,
         }
       );
 
-      // Mark task complete
-      await this.tmuxController.sendCommand(
-        sessionName,
-        'echo ""'
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        'echo "---"'
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        'echo "Task completed"'
-      );
+      if (!response.success) {
+        throw new Error(response.error || 'CLI response failed');
+      }
 
-      return fullResponse;
+      return response.output;
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new Error(`Task execution failed: ${errorMessage}`);
     }
+  }
+
+  /**
+   * Spawn CLI process for agent
+   */
+  async spawnCLI(agent: Agent): Promise<void> {
+    if (!agent.sessionName) {
+      throw new Error(`Agent ${agent.name} has no session`);
+    }
+
+    const adapter = this.adapterFactory.create(agent.type, agent.config);
+
+    await adapter.spawnProcess(agent.sessionName, {
+      workDir: process.cwd(),
+    });
+  }
+
+  /**
+   * Check if CLI is ready for commands
+   */
+  async isCLIReady(agent: Agent): Promise<boolean> {
+    if (!agent.sessionName || !agent.isRunning) {
+      return false;
+    }
+
+    const adapter = this.adapterFactory.create(agent.type, agent.config);
+    return await adapter.isIdle(agent.sessionName);
+  }
+
+  /**
+   * Terminate CLI process for agent
+   */
+  async terminateCLI(agent: Agent): Promise<void> {
+    if (!agent.sessionName) {
+      return;
+    }
+
+    const adapter = this.adapterFactory.create(agent.type, agent.config);
+    await adapter.terminate(agent.sessionName);
   }
 }

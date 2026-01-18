@@ -43,35 +43,18 @@ export class AgentLifecycle {
         agent.type
       );
 
-      // Start agent process (placeholder for Phase 3 - AI provider integration)
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Agent ${agent.name} (${agent.type}) started at $(date)"`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Agent ID: ${agent.id}"`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Capabilities: ${agent.capabilities.join(', ')}"`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        `echo "Session: ${sessionName}"`
-      );
-      await this.tmuxController.sendCommand(
-        sessionName,
-        'echo "Waiting for AI provider integration (Phase 3)..."'
-      );
-
       // Update agent with session info
       agent.sessionName = sessionName;
       agent.isRunning = true;
       agent.status = 'idle';
       agent.lastActivity = new Date().toISOString();
-
       this.agentManager.updateAgent(agent);
+
+      // Spawn CLI process in session
+      await this.taskExecutor.spawnCLI(agent);
+
+      console.log(`Agent ${agent.name} started with ${agent.type} CLI`);
+
     } catch (error) {
       throw new Error(`Failed to start agent: ${error instanceof Error ? error.message : String(error)}`);
     }
@@ -93,26 +76,21 @@ export class AgentLifecycle {
     const sessionName = agent.sessionName;
 
     try {
-      // Check if session exists
-      if (await this.tmuxController.hasSession(sessionName)) {
-        // Send graceful exit command
-        await this.tmuxController.sendCommand(sessionName, 'exit');
+      // Terminate CLI process gracefully
+      await this.taskExecutor.terminateCLI(agent);
 
-        // Wait 2 seconds for graceful exit
-        await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait for CLI to exit
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Force kill if still running
-        if (await this.tmuxController.hasSession(sessionName)) {
-          await this.tmuxController.killSession(sessionName);
-        }
-      }
+      // Kill tmux session
+      await this.tmuxController.killSession(sessionName);
 
       // Update agent status
       agent.isRunning = false;
       agent.status = 'idle';
       agent.lastActivity = new Date().toISOString();
-
       this.agentManager.updateAgent(agent);
+
     } catch (error) {
       throw new Error(`Failed to stop agent: ${error instanceof Error ? error.message : String(error)}`);
     }
