@@ -8,11 +8,23 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/cli.ts",
+    "build:watch": "tsc --watch",
+    "dev": "nodemon",
+    "dev:direct": "ts-node src/cli.ts",
+    "debug": "node --inspect-brk dist/cli.js",
+    "start": "node dist/cli.js",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10.0.0"
+  },
+  "volta": {
+    "node": "24.2.0",
+    "npm": "11.0.0"
   },
   "keywords": [
     "ai",
@@ -37,6 +49,7 @@
     "@types/node": "^25.0.9",
     "@types/react": "^19.2.8",
     "@vitest/coverage-v8": "^3.2.4",
+    "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
