@@ -3,14 +3,21 @@
  * Handles agent start, stop, monitoring, and health checks
  */
 
+import { randomUUID } from 'crypto';
 import { TmuxController } from './tmux-controller';
 import { AgentManager } from './agent-manager';
+import { TaskExecutor } from './task-executor';
+import { Task } from './types';
 
 export class AgentLifecycle {
+  private taskExecutor: TaskExecutor;
+
   constructor(
     private tmuxController: TmuxController,
     private agentManager: AgentManager
-  ) {}
+  ) {
+    this.taskExecutor = new TaskExecutor(tmuxController);
+  }
 
   /**
    * Start an agent in a tmux session
@@ -225,6 +232,67 @@ export class AgentLifecycle {
           console.error(`Failed to stop agent ${agent.name}: ${error instanceof Error ? error.message : String(error)}`);
         }
       }
+    }
+  }
+
+  /**
+   * Execute task on agent
+   */
+  async executeTask(agentId: string, prompt: string): Promise<Task> {
+    const agent = this.agentManager.getAgent(agentId);
+    if (!agent) {
+      throw new Error(`Agent ${agentId} not found`);
+    }
+
+    if (!agent.isRunning || !agent.sessionName) {
+      throw new Error(`Agent ${agent.name} is not running. Start the agent first.`);
+    }
+
+    // Create task
+    const task: Task = {
+      id: randomUUID(),
+      agentId: agent.id,
+      prompt,
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      // Update task status to running
+      task.status = 'running';
+      task.startedAt = new Date().toISOString();
+
+      // Update agent status to busy
+      agent.status = 'busy';
+      agent.lastActivity = new Date().toISOString();
+      this.agentManager.updateAgent(agent);
+
+      // Execute task
+      const result = await this.taskExecutor.executeTask(agent, task);
+
+      // Update task with result
+      task.status = 'completed';
+      task.completedAt = new Date().toISOString();
+      task.result = result;
+
+      // Reset agent status to idle
+      agent.status = 'idle';
+      agent.lastActivity = new Date().toISOString();
+      this.agentManager.updateAgent(agent);
+
+      return task;
+    } catch (error) {
+      // Mark task as failed
+      task.status = 'failed';
+      task.completedAt = new Date().toISOString();
+      task.error = error instanceof Error ? error.message : String(error);
+
+      // Reset agent status to idle
+      agent.status = 'idle';
+      agent.lastActivity = new Date().toISOString();
+      this.agentManager.updateAgent(agent);
+
+      throw error;
     }
   }
 }

@@ -5,6 +5,7 @@
  * Main entry point for command-line interface
  */
 
+import 'dotenv/config';
 import { Command } from 'commander';
 import { createAgentCommand } from './commands/agent/create';
 import { listAgentsCommand } from './commands/agent/list';
@@ -14,6 +15,7 @@ import { startAgentCommand } from './commands/agent/start';
 import { stopAgentCommand } from './commands/agent/stop';
 import { logsAgentCommand } from './commands/agent/logs';
 import { showConfigCommand } from './commands/config/show';
+import { assignTaskCommand } from './commands/task/assign';
 import { ConfigManager } from './core/config-manager';
 import { AgentManager } from './core/agent-manager';
 import { TmuxController } from './core/tmux-controller';
@@ -62,6 +64,9 @@ program.addCommand(statusAgentCommand);
 program.addCommand(startAgentCommand);
 program.addCommand(stopAgentCommand);
 program.addCommand(logsAgentCommand);
+
+// Register task commands
+program.addCommand(assignTaskCommand);
 
 // Register config commands
 program.addCommand(showConfigCommand);

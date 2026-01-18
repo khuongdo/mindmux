@@ -62,6 +62,19 @@ export interface MindMuxMetadata {
   userId: string;                  // Auto-generated UUID
 }
 
+// Task definition
+export interface Task {
+  id: string;                      // UUID v4
+  agentId: string;                 // Agent ID executing the task
+  prompt: string;                  // Task prompt/instruction
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  createdAt: string;               // ISO 8601 timestamp
+  startedAt?: string;              // ISO 8601 timestamp
+  completedAt?: string;            // ISO 8601 timestamp
+  result?: string;                 // Task result/output
+  error?: string;                  // Error message if failed
+}
+
 // Agents storage structure
 export interface AgentsStore {
   agents: Agent[];
