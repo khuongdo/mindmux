@@ -52,11 +52,20 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug TypeScript (ts-node)",
+      "name": "Debug TypeScript (tsx)",
       "skipFiles": ["<node_internals>/**"],
-      "runtimeArgs": ["-r", "ts-node/register"],
-      "program": "${workspaceFolder}/src/cli.ts",
-      "args": ["--help"],
+      "program": "${workspaceFolder}/node_modules/.bin/tsx",
+      "args": ["${workspaceFolder}/src/cli.ts", "--help"],
+      "sourceMaps": true,
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug TUI (TypeScript)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/.bin/tsx",
+      "args": ["${workspaceFolder}/src/cli.ts", "tui"],
       "sourceMaps": true,
       "console": "integratedTerminal"
     },
