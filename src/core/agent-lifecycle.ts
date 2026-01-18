@@ -1,0 +1,230 @@
+/**
+ * Agent lifecycle manager
+ * Handles agent start, stop, monitoring, and health checks
+ */
+
+import { TmuxController } from './tmux-controller';
+import { AgentManager } from './agent-manager';
+
+export class AgentLifecycle {
+  constructor(
+    private tmuxController: TmuxController,
+    private agentManager: AgentManager
+  ) {}
+
+  /**
+   * Start an agent in a tmux session
+   */
+  async startAgent(agentId: string): Promise<void> {
+    const agent = this.agentManager.getAgent(agentId);
+    if (!agent) {
+      throw new Error(`Agent ${agentId} not found`);
+    }
+
+    // Check if agent is already running
+    if (agent.isRunning && agent.sessionName) {
+      if (await this.tmuxController.hasSession(agent.sessionName)) {
+        throw new Error(`Agent ${agent.name} is already running in session ${agent.sessionName}`);
+      }
+    }
+
+    try {
+      // Create tmux session
+      const sessionName = await this.tmuxController.createSession(
+        agent.id,
+        agent.name,
+        agent.type
+      );
+
+      // Start agent process (placeholder for Phase 3 - AI provider integration)
+      await this.tmuxController.sendCommand(
+        sessionName,
+        `echo "Agent ${agent.name} (${agent.type}) started at $(date)"`
+      );
+      await this.tmuxController.sendCommand(
+        sessionName,
+        `echo "Agent ID: ${agent.id}"`
+      );
+      await this.tmuxController.sendCommand(
+        sessionName,
+        `echo "Capabilities: ${agent.capabilities.join(', ')}"`
+      );
+      await this.tmuxController.sendCommand(
+        sessionName,
+        `echo "Session: ${sessionName}"`
+      );
+      await this.tmuxController.sendCommand(
+        sessionName,
+        'echo "Waiting for AI provider integration (Phase 3)..."'
+      );
+
+      // Update agent with session info
+      agent.sessionName = sessionName;
+      agent.isRunning = true;
+      agent.status = 'idle';
+      agent.lastActivity = new Date().toISOString();
+
+      this.agentManager.updateAgent(agent);
+    } catch (error) {
+      throw new Error(`Failed to start agent: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Stop a running agent
+   */
+  async stopAgent(agentId: string): Promise<void> {
+    const agent = this.agentManager.getAgent(agentId);
+    if (!agent) {
+      throw new Error(`Agent ${agentId} not found`);
+    }
+
+    if (!agent.sessionName) {
+      throw new Error(`Agent ${agent.name} has no active session`);
+    }
+
+    const sessionName = agent.sessionName;
+
+    try {
+      // Check if session exists
+      if (await this.tmuxController.hasSession(sessionName)) {
+        // Send graceful exit command
+        await this.tmuxController.sendCommand(sessionName, 'exit');
+
+        // Wait 2 seconds for graceful exit
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Force kill if still running
+        if (await this.tmuxController.hasSession(sessionName)) {
+          await this.tmuxController.killSession(sessionName);
+        }
+      }
+
+      // Update agent status
+      agent.isRunning = false;
+      agent.status = 'idle';
+      agent.lastActivity = new Date().toISOString();
+
+      this.agentManager.updateAgent(agent);
+    } catch (error) {
+      throw new Error(`Failed to stop agent: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
+   * Get agent logs from tmux session
+   */
+  async getAgentLogs(agentId: string, lines: number = 100): Promise<string> {
+    const agent = this.agentManager.getAgent(agentId);
+    if (!agent) {
+      throw new Error(`Agent ${agentId} not found`);
+    }
+
+    if (!agent.sessionName) {
+      throw new Error(`Agent ${agent.name} has no active session`);
+    }
+
+    const sessionName = agent.sessionName;
+
+    if (!await this.tmuxController.hasSession(sessionName)) {
+      throw new Error(`Agent ${agent.name} session not found. Session may have been terminated.`);
+    }
+
+    return await this.tmuxController.captureOutput(sessionName, lines);
+  }
+
+  /**
+   * Monitor agent health (check if session is alive)
+   */
+  async monitorAgentHealth(agentId: string): Promise<boolean> {
+    const agent = this.agentManager.getAgent(agentId);
+    if (!agent || !agent.sessionName) {
+      return false;
+    }
+
+    const sessionExists = await this.tmuxController.hasSession(agent.sessionName);
+
+    // Update agent status if session state changed
+    if (agent.isRunning && !sessionExists) {
+      agent.isRunning = false;
+      agent.status = 'unhealthy';
+      this.agentManager.updateAgent(agent);
+    }
+
+    return sessionExists;
+  }
+
+  /**
+   * Recover orphaned sessions on startup
+   * Cleans up sessions for deleted agents
+   */
+  async recoverOrphanedSessions(): Promise<void> {
+    const tmuxSessions = await this.tmuxController.listSessions();
+    const agents = this.agentManager.listAgents();
+    const agentIds = new Set(agents.map(a => a.id));
+
+    const orphanedSessions: string[] = [];
+
+    for (const session of tmuxSessions) {
+      const agentId = session.replace('mindmux-', '');
+      if (!agentIds.has(agentId)) {
+        // Orphaned session - cleanup
+        await this.tmuxController.killSession(session);
+        orphanedSessions.push(session);
+      }
+    }
+
+    if (orphanedSessions.length > 0) {
+      console.log(`Cleaned up ${orphanedSessions.length} orphaned session(s): ${orphanedSessions.join(', ')}`);
+    }
+
+    // Update running agents with session status
+    for (const agent of agents) {
+      if (agent.sessionName && agent.isRunning) {
+        const sessionExists = await this.tmuxController.hasSession(agent.sessionName);
+        if (!sessionExists) {
+          agent.isRunning = false;
+          agent.status = 'idle';
+          this.agentManager.updateAgent(agent);
+        }
+      }
+    }
+  }
+
+  /**
+   * List all running agents
+   */
+  async listRunningAgents(): Promise<Array<{ agentId: string; agentName: string; sessionName: string }>> {
+    const agents = this.agentManager.listAgents();
+    const running: Array<{ agentId: string; agentName: string; sessionName: string }> = [];
+
+    for (const agent of agents) {
+      if (agent.sessionName && await this.tmuxController.hasSession(agent.sessionName)) {
+        running.push({
+          agentId: agent.id,
+          agentName: agent.name,
+          sessionName: agent.sessionName,
+        });
+      }
+    }
+
+    return running;
+  }
+
+  /**
+   * Stop all running agents
+   */
+  async stopAllAgents(): Promise<void> {
+    const agents = this.agentManager.listAgents();
+
+    for (const agent of agents) {
+      if (agent.isRunning && agent.sessionName) {
+        try {
+          await this.stopAgent(agent.id);
+        } catch (error) {
+          console.error(`Failed to stop agent ${agent.name}: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      }
+    }
+  }
+}

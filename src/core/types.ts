@@ -49,6 +49,9 @@ export interface Agent {
   createdAt: string;               // ISO 8601 timestamp
   lastActivity?: string;           // ISO 8601 timestamp
   config: AgentConfig;             // Provider-specific config
+  sessionName?: string;            // Tmux session name
+  pid?: number;                    // Process ID
+  isRunning?: boolean;             // Session active?
 }
 
 // Metadata tracking

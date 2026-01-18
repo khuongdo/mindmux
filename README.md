@@ -10,10 +10,34 @@ MindMux is a command-line tool for managing and orchestrating multiple AI agents
 
 - **Multi-Agent Management**: Create and manage multiple AI agents with different capabilities
 - **Agent Types**: Support for Claude, Gemini, GPT-4, and OpenCode
+- **Session Management**: Isolated tmux sessions for each agent with persistence
+- **Real-time Logs**: View and follow agent output in real-time
 - **Configuration Hierarchy**: Project-local configs override global settings
 - **Capabilities System**: Assign specific capabilities (code-generation, code-review, debugging, testing, etc.)
 - **Status Tracking**: Monitor agent status and activity
+- **Session Recovery**: Automatic cleanup of orphaned sessions on startup
 - **Cross-Platform**: Works on Linux, macOS, and Windows (WSL)
+
+## Prerequisites
+
+- **Node.js 20+**: Required for TypeScript and CLI
+- **tmux 3.0+**: Required for agent session management
+
+### Install tmux
+
+```bash
+# macOS
+brew install tmux
+
+# Ubuntu/Debian
+sudo apt install tmux
+
+# WSL
+sudo apt install tmux
+
+# Verify installation
+tmux -V
+```
 
 ## Installation
 
@@ -72,6 +96,42 @@ mux agent:delete my-dev-agent
 
 # Skip confirmation
 mux agent:delete my-dev-agent --yes
+```
+
+### Start Agent
+
+```bash
+# Start agent in tmux session
+mux agent:start my-dev-agent
+
+# Agent runs in isolated tmux session
+# Session persists after CLI exits
+```
+
+### Stop Agent
+
+```bash
+# Graceful shutdown
+mux agent:stop my-dev-agent
+
+# Force kill
+mux agent:stop my-dev-agent --force
+```
+
+### View Agent Logs
+
+```bash
+# View last 100 lines
+mux agent:logs my-dev-agent
+
+# View last 500 lines
+mux agent:logs my-dev-agent --lines 500
+
+# Follow live output (like tail -f)
+mux agent:logs my-dev-agent --follow
+
+# Attach directly to tmux session
+tmux attach -t mindmux-{agent-id}
 ```
 
 ### View Configuration
@@ -193,8 +253,8 @@ MIT License - see LICENSE file for details
 
 ## Roadmap
 
-- [x] Phase 1: Foundation & Core CLI (CURRENT)
-- [ ] Phase 2: Tmux Integration & Session Management
+- [x] Phase 1: Foundation & Core CLI
+- [x] Phase 2: Tmux Integration & Session Management (CURRENT)
 - [ ] Phase 3: AI Provider Integration
 - [ ] Phase 4: Task Orchestration
 - [ ] Phase 5: Database Migration (PostgreSQL)
