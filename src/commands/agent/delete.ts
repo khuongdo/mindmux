@@ -3,8 +3,8 @@
  */
 
 import { Command } from 'commander';
-import { ConfigManager } from '../../core/config-manager';
-import { AgentManager } from '../../core/agent-manager';
+import { ConfigManager } from '../../core/config-manager.js';
+import { AgentManager } from '../../core/agent-manager.js';
 import * as readline from 'readline';
 
 export const deleteAgentCommand = new Command('agent:delete')

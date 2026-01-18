@@ -3,7 +3,7 @@
  * Handles session persistence and recovery
  */
 
-import { AgentLifecycle } from './agent-lifecycle';
+import { AgentLifecycle } from './agent-lifecycle.js';
 
 export class SessionManager {
   constructor(private lifecycle: AgentLifecycle) {}

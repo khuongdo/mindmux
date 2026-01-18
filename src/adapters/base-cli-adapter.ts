@@ -3,11 +3,11 @@
  * Shared implementation for all CLI adapters
  */
 
-import { TmuxController } from '../core/tmux-controller';
-import { OutputMonitor, MonitorOptions } from '../utils/output-monitor';
-import { checkCLIInstalled, getCLICommand } from '../utils/cli-checker';
-import { CLIAdapter, CLIAdapterConfig, CLIResponse } from './cli-adapter-interface';
-import { AgentType } from '../core/types';
+import { TmuxController } from '../core/tmux-controller.js';
+import { OutputMonitor, MonitorOptions } from '../utils/output-monitor.js';
+import { checkCLIInstalled, getCLICommand } from '../utils/cli-checker.js';
+import { CLIAdapter, CLIAdapterConfig, CLIResponse } from './cli-adapter-interface.js';
+import { AgentType } from '../core/types.js';
 
 export abstract class BaseCLIAdapter implements CLIAdapter {
   protected outputMonitor: OutputMonitor;

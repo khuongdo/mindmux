@@ -4,10 +4,10 @@
  */
 
 import { randomUUID } from 'crypto';
-import { TmuxController } from './tmux-controller';
-import { AgentManager } from './agent-manager';
-import { TaskExecutor } from './task-executor';
-import { Task } from './types';
+import { TmuxController } from './tmux-controller.js';
+import { AgentManager } from './agent-manager.js';
+import { TaskExecutor } from './task-executor.js';
+import { Task } from './types.js';
 
 export class AgentLifecycle {
   private taskExecutor: TaskExecutor;

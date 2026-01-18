@@ -9,15 +9,15 @@ import {
   getGlobalAgentsPath,
   getProjectAgentsPath,
   hasProjectConfig,
-} from '../utils/paths';
-import { Agent, AgentsStore, AgentType, AgentConfig } from './types';
-import { ConfigManager } from './config-manager';
-import { atomicWriteJSON, safeReadJSON } from '../utils/file-operations';
+} from '../utils/paths.js';
+import { Agent, AgentsStore, AgentType, AgentConfig } from './types.js';
+import { ConfigManager } from './config-manager.js';
+import { atomicWriteJSON, safeReadJSON } from '../utils/file-operations.js';
 import {
   validateAgent,
   validateAgentsStore,
   safeValidate,
-} from '../utils/json-validator';
+} from '../utils/json-validator.js';
 
 export class AgentManager {
   private configManager: ConfigManager;

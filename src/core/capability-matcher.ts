@@ -3,8 +3,8 @@
  * Matches task requirements to agent capabilities
  */
 
-import { Agent, Task } from './types';
-import { AgentManager } from './agent-manager';
+import { Agent, Task } from './types.js';
+import { AgentManager } from './agent-manager.js';
 
 export class CapabilityMatcher {
   constructor(private agentManager: AgentManager) {}

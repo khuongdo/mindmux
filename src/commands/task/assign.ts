@@ -4,10 +4,10 @@
  */
 
 import { Command } from 'commander';
-import { ConfigManager } from '../../core/config-manager';
-import { AgentManager } from '../../core/agent-manager';
-import { TmuxController } from '../../core/tmux-controller';
-import { AgentLifecycle } from '../../core/agent-lifecycle';
+import { ConfigManager } from '../../core/config-manager.js';
+import { AgentManager } from '../../core/agent-manager.js';
+import { TmuxController } from '../../core/tmux-controller.js';
+import { AgentLifecycle } from '../../core/agent-lifecycle.js';
 
 export const assignTaskCommand = new Command('task:assign')
   .description('Assign task to agent and execute')

@@ -4,7 +4,7 @@
  */
 
 import { execSync } from 'child_process';
-import { AgentType } from '../core/types';
+import { AgentType } from '../core/types.js';
 
 export interface CLIToolInfo {
   name: string;

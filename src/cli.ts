@@ -7,27 +7,26 @@
 
 import 'dotenv/config';
 import { Command } from 'commander';
-import { createAgentCommand } from './commands/agent/create';
-import { listAgentsCommand } from './commands/agent/list';
-import { deleteAgentCommand } from './commands/agent/delete';
-import { statusAgentCommand } from './commands/agent/status';
-import { startAgentCommand } from './commands/agent/start';
-import { stopAgentCommand } from './commands/agent/stop';
-import { logsAgentCommand } from './commands/agent/logs';
-import { showConfigCommand } from './commands/config/show';
-import { assignTaskCommand } from './commands/task/assign';
-import { createTaskListCommand } from './commands/task/list';
-import { createTaskStatusCommand } from './commands/task/status';
-import { createTaskCancelCommand } from './commands/task/cancel';
-import { createTaskQueueCommand } from './commands/task/queue';
-import { tuiCommand } from './commands/tui';
-import { ConfigManager } from './core/config-manager';
-import { AgentManager } from './core/agent-manager';
-import { TmuxController } from './core/tmux-controller';
-import { AgentLifecycle } from './core/agent-lifecycle';
-import { SessionManager } from './core/session-manager';
-import { TaskQueueManager } from './core/task-queue-manager';
-import { isTmuxAvailable } from './utils/tmux-check';
+import { createAgentCommand } from './commands/agent/create.js';
+import { listAgentsCommand } from './commands/agent/list.js';
+import { deleteAgentCommand } from './commands/agent/delete.js';
+import { statusAgentCommand } from './commands/agent/status.js';
+import { startAgentCommand } from './commands/agent/start.js';
+import { stopAgentCommand } from './commands/agent/stop.js';
+import { logsAgentCommand } from './commands/agent/logs.js';
+import { showConfigCommand } from './commands/config/show.js';
+import { assignTaskCommand } from './commands/task/assign.js';
+import { createTaskListCommand } from './commands/task/list.js';
+import { createTaskStatusCommand } from './commands/task/status.js';
+import { createTaskCancelCommand } from './commands/task/cancel.js';
+import { createTaskQueueCommand } from './commands/task/queue.js';
+import { ConfigManager } from './core/config-manager.js';
+import { AgentManager } from './core/agent-manager.js';
+import { TmuxController } from './core/tmux-controller.js';
+import { AgentLifecycle } from './core/agent-lifecycle.js';
+import { SessionManager } from './core/session-manager.js';
+import { TaskQueueManager } from './core/task-queue-manager.js';
+import { isTmuxAvailable } from './utils/tmux-check.js';
 
 // Singleton instances
 let taskQueueManager: TaskQueueManager | null = null;
@@ -104,9 +103,6 @@ program.addCommand(createTaskQueueCommand(getTaskQueueManager));
 
 // Register config commands
 program.addCommand(showConfigCommand);
-
-// Register TUI command
-program.addCommand(tuiCommand);
 
 // Parse arguments
 program.parse();

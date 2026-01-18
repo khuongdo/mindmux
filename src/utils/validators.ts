@@ -2,8 +2,8 @@
  * Input validation utilities
  */
 
-import { AgentType } from '../core/types';
-import { VALID_CAPABILITIES } from './defaults';
+import { AgentType } from '../core/types.js';
+import { VALID_CAPABILITIES } from './defaults.js';
 
 /**
  * Validate agent name

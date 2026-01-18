@@ -3,7 +3,7 @@
  * Selects optimal agent from available candidates
  */
 
-import { Agent } from './types';
+import { Agent } from './types.js';
 
 export type LoadBalancingStrategy = 'round-robin' | 'least-loaded';
 

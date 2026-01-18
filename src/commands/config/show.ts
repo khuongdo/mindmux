@@ -3,7 +3,7 @@
  */
 
 import { Command } from 'commander';
-import { ConfigManager } from '../../core/config-manager';
+import { ConfigManager } from '../../core/config-manager.js';
 
 export const showConfigCommand = new Command('config:show')
   .description('Show current configuration (merged from all sources)')

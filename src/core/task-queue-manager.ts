@@ -4,12 +4,12 @@
  */
 
 import { randomUUID } from 'crypto';
-import { Task, TaskStatus, CreateTaskOptions, Agent } from './types';
-import { AgentManager } from './agent-manager';
-import { CapabilityMatcher } from './capability-matcher';
-import { LoadBalancer, LoadBalancingStrategy } from './load-balancer';
-import { DependencyResolver } from './dependency-resolver';
-import { AgentLifecycle } from './agent-lifecycle';
+import { Task, TaskStatus, CreateTaskOptions, Agent } from './types.js';
+import { AgentManager } from './agent-manager.js';
+import { CapabilityMatcher } from './capability-matcher.js';
+import { LoadBalancer, LoadBalancingStrategy } from './load-balancer.js';
+import { DependencyResolver } from './dependency-resolver.js';
+import { AgentLifecycle } from './agent-lifecycle.js';
 
 export interface TaskQueueConfig {
   defaultPriority: number;

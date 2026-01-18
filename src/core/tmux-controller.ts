@@ -4,7 +4,7 @@
  */
 
 import { execSync } from 'child_process';
-import { ensureTmuxAvailable } from '../utils/tmux-check';
+import { ensureTmuxAvailable } from '../utils/tmux-check.js';
 
 export class TmuxController {
   private initialized: boolean = false;

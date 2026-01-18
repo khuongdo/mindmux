@@ -6,7 +6,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
-import { DEFAULT_CONFIG } from '../utils/defaults';
+import { DEFAULT_CONFIG } from '../utils/defaults.js';
 import {
   getGlobalConfigDir,
   getGlobalConfigPath,
@@ -18,14 +18,14 @@ import {
   getGlobalSessionCacheDir,
   getProjectConfigPath,
   hasProjectConfig,
-} from '../utils/paths';
-import { MindMuxConfig, MindMuxMetadata } from './types';
-import { atomicWriteJSON, safeReadJSON } from '../utils/file-operations';
+} from '../utils/paths.js';
+import { MindMuxConfig, MindMuxMetadata } from './types.js';
+import { atomicWriteJSON, safeReadJSON } from '../utils/file-operations.js';
 import {
   validateMindMuxConfig,
   validateMindMuxMetadata,
   safeValidate,
-} from '../utils/json-validator';
+} from '../utils/json-validator.js';
 
 export class ConfigManager {
   private config: MindMuxConfig;

@@ -10,7 +10,7 @@ import {
   AgentType,
   AgentStatus,
   AgentsStore,
-} from '../core/types';
+} from '../core/types.js';
 
 // Validation error class
 export class ValidationError extends Error {

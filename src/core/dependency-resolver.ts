@@ -3,7 +3,7 @@
  * Checks if task dependencies are satisfied
  */
 
-import { Task, TaskStatus } from './types';
+import { Task, TaskStatus } from './types.js';
 
 export class DependencyResolver {
   /**

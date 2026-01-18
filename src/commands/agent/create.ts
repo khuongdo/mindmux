@@ -3,9 +3,9 @@
  */
 
 import { Command } from 'commander';
-import { ConfigManager } from '../../core/config-manager';
-import { AgentManager } from '../../core/agent-manager';
-import { AgentType } from '../../core/types';
+import { ConfigManager } from '../../core/config-manager.js';
+import { AgentManager } from '../../core/agent-manager.js';
+import { AgentType } from '../../core/types.js';
 import {
   validateAgentName,
   validateAgentType,
@@ -13,7 +13,7 @@ import {
   getAgentNameError,
   getAgentTypeError,
   getCapabilitiesError,
-} from '../../utils/validators';
+} from '../../utils/validators.js';
 
 export const createAgentCommand = new Command('agent:create')
   .description('Create a new agent')

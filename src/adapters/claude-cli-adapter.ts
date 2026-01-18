@@ -3,10 +3,10 @@
  * Adapter for Claude Code CLI (claude command)
  */
 
-import { TmuxController } from '../core/tmux-controller';
-import { BaseCLIAdapter } from './base-cli-adapter';
-import { CLIAdapterConfig } from './cli-adapter-interface';
-import { MonitorOptions } from '../utils/output-monitor';
+import { TmuxController } from '../core/tmux-controller.js';
+import { BaseCLIAdapter } from './base-cli-adapter.js';
+import { CLIAdapterConfig } from './cli-adapter-interface.js';
+import { MonitorOptions } from '../utils/output-monitor.js';
 
 export class ClaudeCLIAdapter extends BaseCLIAdapter {
   constructor(

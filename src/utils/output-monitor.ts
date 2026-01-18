@@ -3,8 +3,8 @@
  * Polls tmux pane content to detect when CLI response is complete
  */
 
-import { TmuxController } from '../core/tmux-controller';
-import { hashContent, cleanTerminalOutput } from './content-hasher';
+import { TmuxController } from '../core/tmux-controller.js';
+import { hashContent, cleanTerminalOutput } from './content-hasher.js';
 
 export interface MonitorOptions {
   pollIntervalMs: number;    // How often to check (default: 500ms)

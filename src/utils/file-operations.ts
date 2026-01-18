@@ -3,7 +3,7 @@
  * Prevents data corruption during file writes
  */
 
-import { writeFileSync, renameSync, unlinkSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, renameSync, unlinkSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { randomUUID } from 'crypto';
 
@@ -34,7 +34,7 @@ export function atomicWriteJSON(filePath: string, data: unknown): void {
     writeFileSync(tempPath, jsonString, 'utf-8');
 
     // Step 4: Validate written file is parsable
-    const writtenContent = require('fs').readFileSync(tempPath, 'utf-8');
+    const writtenContent = readFileSync(tempPath, 'utf-8');
     try {
       JSON.parse(writtenContent);
     } catch (parseError) {
@@ -72,7 +72,7 @@ export function safeReadJSON<T>(filePath: string): T | null {
   }
 
   try {
-    const content = require('fs').readFileSync(filePath, 'utf-8');
+    const content = readFileSync(filePath, 'utf-8');
     return JSON.parse(content) as T;
   } catch (error) {
     throw new Error(`Failed to read/parse JSON from ${filePath}: ${error}`);

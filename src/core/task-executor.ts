@@ -3,9 +3,9 @@
  * Executes tasks by sending prompts to CLI tools via tmux
  */
 
-import { TmuxController } from './tmux-controller';
-import { CLIAdapterFactory } from '../adapters/cli-adapter-factory';
-import { Agent, Task } from './types';
+import { TmuxController } from './tmux-controller.js';
+import { CLIAdapterFactory } from '../adapters/cli-adapter-factory.js';
+import { Agent, Task } from './types.js';
 
 export class TaskExecutor {
   private adapterFactory: CLIAdapterFactory;

@@ -2,7 +2,7 @@
  * Default configuration values for MindMux
  */
 
-import { MindMuxConfig } from '../core/types';
+import { MindMuxConfig } from '../core/types.js';
 
 export const DEFAULT_CONFIG: MindMuxConfig = {
   version: '0.1.0',

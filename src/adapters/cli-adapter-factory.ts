@@ -3,13 +3,13 @@
  * Factory for creating CLI adapters based on agent type
  */
 
-import { TmuxController } from '../core/tmux-controller';
-import { CLIAdapter } from './cli-adapter-interface';
-import { ClaudeCLIAdapter } from './claude-cli-adapter';
-import { OpenCodeCLIAdapter } from './opencode-cli-adapter';
-import { GeminiCLIAdapter } from './gemini-cli-adapter';
-import { AgentType, AgentConfig } from '../core/types';
-import { ensureCLIInstalled } from '../utils/cli-checker';
+import { TmuxController } from '../core/tmux-controller.js';
+import { CLIAdapter } from './cli-adapter-interface.js';
+import { ClaudeCLIAdapter } from './claude-cli-adapter.js';
+import { OpenCodeCLIAdapter } from './opencode-cli-adapter.js';
+import { GeminiCLIAdapter } from './gemini-cli-adapter.js';
+import { AgentType, AgentConfig } from '../core/types.js';
+import { ensureCLIInstalled } from '../utils/cli-checker.js';
 
 export class CLIAdapterFactory {
   constructor(private tmuxController: TmuxController) {}

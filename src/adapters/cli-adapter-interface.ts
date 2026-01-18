@@ -3,7 +3,7 @@
  * Unified interface for controlling AI CLI tools via tmux
  */
 
-import { AgentType } from '../core/types';
+import { AgentType } from '../core/types.js';
 
 export interface CLIAdapterConfig {
   workDir?: string;          // Working directory for CLI

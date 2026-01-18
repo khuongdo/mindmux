@@ -25,9 +25,14 @@ npm run build
 # Run built version
 npm start -- --help
 
-# Run with auto-reload (development)
+# Run TypeScript directly (fast, no build)
 npm run dev -- --help
+
+# TUI requires compiled version (ESM dependencies)
+npm run tui
 ```
+
+**Important**: TUI command (`tui`) must use compiled JavaScript due to yoga-wasm-web (ESM module with top-level await). Other commands work fine with `tsx`.
 
 ## Debugging Methods
 
