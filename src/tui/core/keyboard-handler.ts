@@ -8,6 +8,8 @@ export type KeyHandler = (key: string, data: any) => void;
 
 export class KeyboardHandler {
   private handlers: Map<string, KeyHandler> = new Map();
+  private textInputHandler?: (char: string) => void;
+  private textInputMode = false;
 
   constructor() {
     // Set raw mode for character-by-character input
@@ -22,6 +24,22 @@ export class KeyboardHandler {
    */
   on(key: string, handler: KeyHandler): void {
     this.handlers.set(key, handler);
+  }
+
+  /**
+   * Enable text input mode for capturing character input
+   */
+  enableTextInput(handler: (char: string) => void): void {
+    this.textInputMode = true;
+    this.textInputHandler = handler;
+  }
+
+  /**
+   * Disable text input mode
+   */
+  disableTextInput(): void {
+    this.textInputMode = false;
+    this.textInputHandler = undefined;
   }
 
   /**
@@ -41,6 +59,25 @@ export class KeyboardHandler {
           process.exit(0);
         }
         return;
+      }
+
+      // Handle text input mode
+      if (this.textInputMode && this.textInputHandler) {
+        // Allow special keys even in text input mode
+        if (key.name === 'return' || key.name === 'escape' || key.name === 'backspace' ||
+            key.name === 'up' || key.name === 'down' || key.name === 'space') {
+          const keyName = key.name;
+          if (this.handlers.has(keyName)) {
+            this.handlers.get(keyName)!(keyName, key);
+          }
+          return;
+        }
+
+        // Capture printable characters
+        if (str && str.length === 1 && !key.ctrl && !key.meta) {
+          this.textInputHandler(str);
+          return;
+        }
       }
 
       // Handle named keys (up, down, etc.)

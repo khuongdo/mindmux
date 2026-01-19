@@ -6,6 +6,8 @@ import { Command } from 'commander';
 import { TUIManager } from '../tui/index.js';
 import { ConfigManager } from '../core/config-manager.js';
 import { AgentManager } from '../core/agent-manager.js';
+import { AgentLifecycle } from '../core/agent-lifecycle.js';
+import { TmuxController } from '../core/tmux-controller.js';
 
 export const tuiCommand = new Command('tui')
   .description('Launch terminal UI for managing agents')
@@ -13,14 +15,20 @@ export const tuiCommand = new Command('tui')
   .action(async (options) => {
     const refreshInterval = parseInt(options.refresh, 10);
 
-    // Initialize managers
+    // Initialize managers in correct order (avoiding circular dependencies)
     const configManager = new ConfigManager();
     const agentManager = new AgentManager(configManager);
+    const tmuxController = new TmuxController();
+    const agentLifecycle = new AgentLifecycle(
+      tmuxController,
+      agentManager
+    );
 
     const tui = new TUIManager({
       title: 'MindMux - Multi-Agent Orchestration',
       refreshInterval,
       agentManager,
+      agentLifecycle,
     });
 
     tui.start();
