@@ -42,7 +42,9 @@
     "ansis": "^4.2.0",
     "commander": "^13.1.0",
     "dotenv": "^17.2.3",
-    "node-tmux": "^1.0.2"
+    "node-tmux": "^1.0.2",
+    "pg": "^8.11.0",
+    "redis": "^4.6.0"
   },
   "devDependencies": {
     "@types/node": "^25.0.9",
