@@ -1,202 +1,132 @@
 #!/usr/bin/env node
 
 /**
- * MindMux CLI - Multi-Agent AI CLI
- * Main entry point for command-line interface
+ * MindMux v2 - AI Session Tracker
+ * Passive session manager for Claude Code, Gemini CLI, and other AI agents
  */
 
-import 'dotenv/config';
 import { Command } from 'commander';
-import { createAgentCommand } from './commands/agent/create.js';
-import { listAgentsCommand } from './commands/agent/list.js';
-import { deleteAgentCommand } from './commands/agent/delete.js';
-import { statusAgentCommand } from './commands/agent/status.js';
-import { startAgentCommand } from './commands/agent/start.js';
-import { stopAgentCommand } from './commands/agent/stop.js';
-import { logsAgentCommand } from './commands/agent/logs.js';
-import { showConfigCommand } from './commands/config/show.js';
-import { assignTaskCommand } from './commands/task/assign.js';
-import { createTaskListCommand } from './commands/task/list.js';
-import { createTaskStatusCommand } from './commands/task/status.js';
-import { createTaskCancelCommand } from './commands/task/cancel.js';
-import { createTaskQueueCommand } from './commands/task/queue.js';
-import { tuiCommand } from './commands/tui.js';
-import { ConfigManager } from './core/config-manager.js';
-import { AgentManager } from './core/agent-manager.js';
 import { TmuxController } from './core/tmux-controller.js';
-import { AgentLifecycle } from './core/agent-lifecycle.js';
-import { SessionManager } from './core/session-manager.js';
-import { TaskQueueManager } from './core/task-queue-manager.js';
-import { isTmuxAvailable } from './utils/tmux-check.js';
-import {
-  initializePersistence,
-  shutdownPersistence,
-  PersistenceServices,
-} from './persistence/persistence-manager.js';
-
-// Singleton instances
-let taskQueueManager: TaskQueueManager | null = null;
-let persistenceServices: PersistenceServices | null = null;
-
-function getTaskQueueManager(): TaskQueueManager {
-  if (!taskQueueManager) {
-    const configManager = new ConfigManager();
-    const agentManager = new AgentManager(configManager);
-    const tmuxController = new TmuxController();
-    const agentLifecycle = new AgentLifecycle(tmuxController, agentManager);
-
-    // Attach SQLite repository if available
-    if (persistenceServices) {
-      agentManager.setRepository(persistenceServices.agentRepository);
-    }
-
-    taskQueueManager = new TaskQueueManager(
-      agentManager,
-      agentLifecycle,
-      {
-        defaultPriority: 50,
-        defaultMaxRetries: 3,
-        defaultTimeout: configManager.getConfig().timeout,
-        loadBalancingStrategy: 'round-robin',
-      }
-    );
-  }
-  return taskQueueManager;
-}
-
-/**
- * Initialize persistence layer on startup
- */
-async function initializePersistenceLayer() {
-  try {
-    persistenceServices = initializePersistence();
-  } catch (error) {
-    console.warn(
-      'Persistence initialization failed, continuing with JSON fallback:',
-      error instanceof Error ? error.message : String(error)
-    );
-    // Continue without persistence - JSON fallback will be used
-  }
-}
-
-/**
- * Perform startup recovery
- */
-async function performStartupRecovery() {
-  try {
-    if (!persistenceServices) {
-      return;
-    }
-
-    // Recover incomplete tasks
-    const incompleteTasks = persistenceServices.taskRepository.getIncomplete();
-    if (incompleteTasks.length > 0) {
-      console.log(`Found ${incompleteTasks.length} incomplete task(s) from previous session`);
-      // Tasks remain in queue for reprocessing
-    }
-
-    // Find and cleanup orphaned sessions
-    const orphanedSessions = persistenceServices.sessionRepository.findOrphaned();
-    if (orphanedSessions.length > 0) {
-      console.log(`Found ${orphanedSessions.length} orphaned session(s)`);
-      // Sessions will be terminated on next health check
-    }
-  } catch (error) {
-    console.warn('Startup recovery failed:', error instanceof Error ? error.message : String(error));
-  }
-}
-
-// Initialize session recovery on startup
-async function initializeSessionRecovery() {
-  // Only run if tmux is available (don't block if not)
-  if (!isTmuxAvailable()) {
-    return;
-  }
-
-  try {
-    const configManager = new ConfigManager();
-    const agentManager = new AgentManager(configManager);
-    const tmuxController = new TmuxController();
-    const lifecycle = new AgentLifecycle(tmuxController, agentManager);
-    const sessionManager = new SessionManager(lifecycle);
-
-    await tmuxController.initialize();
-    await sessionManager.initializeOnStartup();
-  } catch (error) {
-    // Silently fail - don't block CLI startup
-    // Error will be shown when user tries to use tmux commands
-  }
-}
-
-/**
- * Run all startup routines
- */
-async function runStartupRoutines() {
-  // Initialize persistence first
-  await initializePersistenceLayer();
-
-  // Perform recovery
-  await performStartupRecovery();
-
-  // Initialize session recovery
-  await initializeSessionRecovery();
-}
-
-/**
- * Graceful shutdown
- */
-process.on('exit', () => {
-  if (persistenceServices) {
-    shutdownPersistence(persistenceServices);
-  }
-});
-
-process.on('SIGINT', () => {
-  if (persistenceServices) {
-    shutdownPersistence(persistenceServices);
-  }
-  process.exit(0);
-});
-
-process.on('SIGTERM', () => {
-  if (persistenceServices) {
-    shutdownPersistence(persistenceServices);
-  }
-  process.exit(0);
-});
+import { SessionScanner } from './discovery/session-scanner.js';
+import { SessionForker } from './operations/session-fork.js';
+import { Dashboard } from './tui/dashboard.js';
+import { getStatusSymbol, getStatusColor } from './discovery/status-detector.js';
+import { colors } from './tui/utils/colors.js';
 
 const program = new Command();
 
 program
-  .name('mux')
-  .description('MindMux - Multi-Agent AI CLI for orchestrating AI agents')
-  .version('0.1.0')
-  .hook('preAction', async () => {
-    // Run all startup routines before first command
-    await runStartupRoutines();
+  .name('mindmux')
+  .description('AI Session Tracker - Terminal session manager for AI coding agents')
+  .version('2.0.0');
+
+// Main TUI command (default)
+program
+  .command('tui', { isDefault: true })
+  .description('Launch interactive dashboard')
+  .action(async () => {
+    const dashboard = new Dashboard();
+    await dashboard.start();
   });
 
-// Register agent commands
-program.addCommand(createAgentCommand);
-program.addCommand(listAgentsCommand);
-program.addCommand(deleteAgentCommand);
-program.addCommand(statusAgentCommand);
-program.addCommand(startAgentCommand);
-program.addCommand(stopAgentCommand);
-program.addCommand(logsAgentCommand);
+// List sessions
+program
+  .command('list')
+  .description('List all AI sessions')
+  .option('-t, --type <tool>', 'Filter by AI tool type (claude, gemini, opencode, cursor, aider, codex)')
+  .option('-s, --status <status>', 'Filter by status (running, waiting, idle, error)')
+  .action(async (options) => {
+    const tmux = new TmuxController();
+    const scanner = new SessionScanner(tmux);
 
-// Register task commands
-program.addCommand(assignTaskCommand);
-program.addCommand(createTaskListCommand(getTaskQueueManager));
-program.addCommand(createTaskStatusCommand(getTaskQueueManager));
-program.addCommand(createTaskCancelCommand(getTaskQueueManager));
-program.addCommand(createTaskQueueCommand(getTaskQueueManager));
+    // Scan for sessions
+    let sessions = await scanner.scan();
 
-// Register config commands
-program.addCommand(showConfigCommand);
+    // Apply filters
+    if (options.type) {
+      sessions = scanner.filterByTool(sessions, options.type);
+    }
+    if (options.status) {
+      sessions = scanner.filterByStatus(sessions, options.status);
+    }
 
-// Register TUI command
-program.addCommand(tuiCommand);
+    // Display results
+    if (sessions.length === 0) {
+      console.log('No AI sessions found');
+      console.log('Start an AI CLI tool (claude code, gemini chat, etc.) in tmux first');
+      return;
+    }
 
-// Parse arguments
+    console.log(`\nFound ${sessions.length} AI session(s):\n`);
+
+    for (const session of sessions) {
+      const symbol = getStatusSymbol(session.status);
+      const color = getStatusColor(session.status);
+      const statusText = colors[color](`${symbol} ${session.status}`);
+
+      console.log(`[${statusText}] ${session.toolType} - ${session.projectPath}`);
+      console.log(`  Session: ${session.sessionName} | Pane: ${session.paneId}`);
+      if (session.label) {
+        console.log(`  Label: ${session.label}`);
+      }
+      console.log('');
+    }
+  });
+
+// Attach to session
+program
+  .command('attach <session-id>')
+  .description('Attach to session by pane ID')
+  .action(async (sessionId: string) => {
+    const tmux = new TmuxController();
+    const scanner = new SessionScanner(tmux);
+    const sessions = await scanner.scan();
+
+    const session = sessions.find(s => s.paneId === sessionId || s.id === sessionId);
+    if (!session) {
+      console.error(`Error: Session ${sessionId} not found`);
+      console.log('\nRun "mindmux list" to see available sessions');
+      process.exit(1);
+    }
+
+    await tmux.attach(session.sessionName);
+  });
+
+// Fork session
+program
+  .command('fork <pane-id>')
+  .description('Fork session with conversation history')
+  .action(async (paneId: string) => {
+    const tmux = new TmuxController();
+    const scanner = new SessionScanner(tmux);
+    const forker = new SessionForker(tmux);
+
+    // Find session
+    const sessions = await scanner.scan();
+    const session = sessions.find(s => s.paneId === paneId || s.id === paneId);
+
+    if (!session) {
+      console.error(`Error: Session ${paneId} not found`);
+      console.log('\nRun "mindmux list" to see available sessions');
+      process.exit(1);
+    }
+
+    try {
+      const newPaneId = await forker.fork(session);
+      console.log(`\n✓ Fork complete! New pane: ${newPaneId}`);
+      console.log(`\nAttach to view: tmux attach -t ${session.sessionName}`);
+    } catch (error) {
+      console.error('Fork failed:', error instanceof Error ? error.message : String(error));
+      process.exit(1);
+    }
+  });
+
+// Check tmux availability
+const tmux = new TmuxController();
+if (!tmux.isAvailable()) {
+  console.error('Error: tmux is not installed or not in PATH');
+  console.error('Install tmux: brew install tmux (macOS) or apt install tmux (Linux)');
+  process.exit(1);
+}
+
 program.parse();

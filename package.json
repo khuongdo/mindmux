@@ -1,81 +1,60 @@
 {
   "name": "mindmux",
-  "version": "0.1.0",
-  "description": "Multi-Agent AI CLI for orchestrating AI agents",
+  "version": "2.0.0",
+  "description": "AI Session Tracker - Terminal session manager for Claude Code, Gemini CLI, OpenCode, and other AI coding agents",
   "type": "module",
-  "main": "dist/cli.js",
   "bin": {
-    "mux": "./dist/cli.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "dev": "tsx src/cli.ts",
-    "dev:watch": "tsx watch src/cli.ts",
-    "debug": "node --inspect-brk dist/cli.js",
-    "debug:ts": "tsx --inspect-brk src/cli.ts",
-    "start": "node dist/cli.js",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest --coverage",
-    "typecheck": "tsc --noEmit",
-    "lint": "echo 'Linting not configured yet'",
-    "docker:build": "docker build -f docker/Dockerfile -t mindmux:latest .",
-    "docker:build-dev": "docker-compose -f docker/docker-compose.yml build",
-    "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
-    "docker:down": "docker-compose -f docker/docker-compose.yml down",
-    "docker:logs": "docker-compose -f docker/docker-compose.yml logs -f mindmux",
-    "prepare": "node -e \"try { require('husky').install() } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e }\""
-  },
-  "engines": {
-    "node": ">=24.0.0",
-    "npm": ">=10.0.0"
-  },
-  "volta": {
-    "node": "24.2.0",
-    "npm": "11.0.0"
+    "mindmux": "./dist/cli.js"
   },
   "keywords": [
     "ai",
+    "claude",
+    "gemini",
+    "opencode",
+    "cursor",
+    "aider",
+    "tmux",
+    "session",
+    "tracker",
+    "mcp",
+    "terminal",
+    "tui",
     "cli",
-    "agents",
-    "multi-agent",
-    "orchestration"
+    "ai-tools",
+    "session-manager"
   ],
-  "author": "Your Name <your.email@example.com>",
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/mindmux"
+    "url": "https://github.com/nicosys/mindmux.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/mindmux/issues"
+    "url": "https://github.com/nicosys/mindmux/issues"
   },
-  "homepage": "https://github.com/yourusername/mindmux#readme",
+  "homepage": "https://github.com/nicosys/mindmux#readme",
+  "author": "Nico <nico@nicosys.dev>",
+  "license": "MIT",
   "files": [
-    "dist",
-    "package.json",
+    "dist/",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "ansis": "^4.2.0",
-    "better-sqlite3": "^9.2.2",
-    "commander": "^13.1.0",
-    "dotenv": "^17.2.3",
-    "node-tmux": "^1.0.2",
-    "pg": "^8.11.0",
-    "redis": "^4.6.0"
+    "@clack/prompts": "^0.7.0",
+    "commander": "^13.0.0",
+    "@iarna/toml": "^2.2.5"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.8",
-    "@types/node": "^25.0.9",
-    "@vitest/coverage-v8": "^3.2.4",
-    "nodemon": "^3.1.11",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "typescript": "^5.9.0",
+    "@types/node": "^25.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

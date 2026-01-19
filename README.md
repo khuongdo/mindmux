@@ -1,302 +1,205 @@
 # MindMux
 
-Multi-Agent AI CLI for orchestrating AI agents in development workflows.
+**AI Session Tracker** - Terminal session manager for Claude Code, Gemini CLI, OpenCode, and other AI coding agents.
 
-## Overview
-
-MindMux is a command-line tool for managing and orchestrating multiple AI agents (Claude, Gemini, GPT-4, OpenCode) to work together on complex development tasks. It provides a unified interface for creating, managing, and coordinating AI agents with different capabilities.
+[![npm version](https://badge.fury.io/js/mindmux.svg)](https://badge.fury.io/js/mindmux)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
-- **Multi-Agent Management**: Create and manage multiple AI agents with different capabilities
-- **Agent Types**: Support for Claude, Gemini, GPT-4, and OpenCode
-- **Session Management**: Isolated tmux sessions for each agent with persistence
-- **Real-time Logs**: View and follow agent output in real-time
-- **Configuration Hierarchy**: Project-local configs override global settings
-- **Capabilities System**: Assign specific capabilities (code-generation, code-review, debugging, testing, etc.)
-- **Status Tracking**: Monitor agent status and activity
-- **Session Recovery**: Automatic cleanup of orphaned sessions on startup
-- **Cross-Platform**: Works on Linux, macOS, and Windows (WSL)
+- 🔍 **Auto-Discovery** - Automatically finds AI CLI sessions running in tmux
+- 📊 **Real-Time Status** - Running ● | Waiting ◐ | Idle ○ | Error ✕
+- 🍴 **Session Forking** - Clone conversations with full history
+- 🔌 **MCP Management** - Toggle Model Context Protocol servers per-session
+- 🏷️ **Session Labels** - Organize sessions with custom tags
+- 🔎 **Search & Filter** - Find sessions by label, path, or tool type
+- ⌨️ **Keyboard Driven** - Vim-style navigation (j/k)
 
-## Prerequisites
-
-- **Node.js 20+**: Required for TypeScript and CLI
-- **tmux 3.0+**: Required for agent session management
-
-### Install tmux
+## Quick Start
 
 ```bash
-# macOS
-brew install tmux
+# Install
+npm install -g mindmux
 
-# Ubuntu/Debian
-sudo apt install tmux
+# Start an AI tool in tmux
+tmux new -s my-session
+claude code  # or: gemini chat, opencode, cursor, aider
 
-# WSL
-sudo apt install tmux
+# In another terminal, launch MindMux
+mindmux
 
-# Verify installation
-tmux -V
+# Navigate with j/k, press Enter to attach, f to fork, m for MCPs
 ```
 
 ## Installation
 
+### Prerequisites
+
+- **tmux** (3.0+): `brew install tmux` (macOS) or `apt install tmux` (Linux)
+- **Node.js** (18+): `brew install node` or [download](https://nodejs.org/)
+- **AI CLI tools**: Claude Code, Gemini CLI, OpenCode, etc.
+
+### Install MindMux
+
 ```bash
-# Clone repository
+npm install -g mindmux
+```
+
+## Usage
+
+### Interactive TUI (Default)
+
+```bash
+mindmux  # Launch dashboard
+```
+
+**Keyboard Shortcuts:**
+- `j/k` or `↓/↑` - Navigate sessions
+- `Enter` - Attach to session
+- `f` - Fork session (clone with history)
+- `m` - Manage MCP servers
+- `l` - Label session
+- `/` - Search/filter
+- `h` or `?` - Help
+- `q` or `Ctrl+C` - Quit
+
+### CLI Commands
+
+```bash
+# List all AI sessions
+mindmux list
+
+# Filter by tool type
+mindmux list --type claude
+
+# Filter by status
+mindmux list --status running
+
+# Attach to specific session
+mindmux attach %0  # Use pane ID from list
+```
+
+## Configuration
+
+### MCP Servers
+
+Define MCP servers in `~/.mindmux/mcp-servers.toml`:
+
+```toml
+[mcp.filesystem]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/project"]
+scope = "local"  # local = per-project, global = all sessions
+
+[mcp.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+scope = "global"
+
+[mcp.github.env]
+GITHUB_TOKEN = "ghp_your_token"
+```
+
+Toggle MCPs in TUI with `m` key.
+
+### Session Labels
+
+Labels are stored in `~/.mindmux/session-labels.json` and persist across restarts.
+
+## Examples
+
+### Workflow: Clone a Conversation
+
+```bash
+# Start Claude in tmux
+tmux new -s feature-dev
+claude code
+
+# Have a conversation with Claude
+> Implement authentication with JWT
+
+# In another terminal, fork the conversation
+mindmux
+# Navigate to feature-dev session, press 'f'
+# New session created with full conversation history
+```
+
+### Workflow: MCP Toggle
+
+```bash
+# Launch MindMux
+mindmux
+
+# Navigate to session, press 'm'
+# Select MCP server to toggle
+# Confirm restart
+# AI tool restarts with MCP enabled
+```
+
+## Supported AI Tools
+
+- **Claude Code** - Anthropic's CLI coding agent
+- **Gemini CLI** - Google's Gemini command-line interface
+- **OpenCode** - Open-source AI coding assistant
+- **Cursor** - AI-powered code editor CLI
+- **Aider** - AI pair programming tool
+- **Codex** - OpenAI Codex CLI
+
+## Comparison with Agent-Deck
+
+MindMux v2 is inspired by [agent-deck](https://github.com/asheshgoplani/agent-deck) but built in TypeScript for Node.js developers:
+
+| Feature | Agent-Deck | MindMux v2 |
+|---------|------------|------------|
+| Language | Go + Bubble Tea | TypeScript + @clack/prompts |
+| Session Discovery | ✅ | ✅ |
+| Status Detection | ✅ | ✅ |
+| Session Forking | ✅ | ✅ |
+| MCP Management | ✅ | ✅ |
+| Package Manager | Go install | npm install |
+
+## Troubleshooting
+
+### No sessions found
+
+- Ensure tmux is running: `tmux ls`
+- Ensure AI tool is running in tmux session
+- Check tool process name matches detection patterns
+
+### Fork fails
+
+- Verify tmux allows pane splitting
+- Check AI tool can restart in same directory
+- Increase fork timeout if tool initialization is slow
+
+### MCP toggle fails
+
+- Verify MCP configuration syntax in TOML
+- Check MCP server command is valid
+- Ensure AI tool supports MCP protocol
+
+## Development
+
+```bash
+# Clone repo
 git clone https://github.com/yourusername/mindmux.git
 cd mindmux
 
 # Install dependencies
 npm install
 
-# Build TypeScript
+# Build
 npm run build
 
-# Link CLI globally (optional)
-npm link
+# Run locally
+node dist/cli.js
 ```
-
-## Quick Start
-
-### Create an Agent
-
-```bash
-# Create a Claude agent for code generation and review
-mux agent:create my-dev-agent --type claude --capabilities code-generation,code-review
-
-# Create a Gemini agent for testing
-mux agent:create test-bot --type gemini --capabilities testing,debugging
-
-# Create with custom model
-mux agent:create gpt-helper --type gpt4 --model gpt-4-turbo --capabilities documentation
-```
-
-### List Agents
-
-```bash
-# Simple table view
-mux agent:list
-
-# Detailed view
-mux agent:list --verbose
-```
-
-### View Agent Status
-
-```bash
-# By name or ID
-mux agent:status my-dev-agent
-```
-
-### Delete Agent
-
-```bash
-# With confirmation prompt
-mux agent:delete my-dev-agent
-
-# Skip confirmation
-mux agent:delete my-dev-agent --yes
-```
-
-### Start Agent
-
-```bash
-# Start agent in tmux session
-mux agent:start my-dev-agent
-
-# Agent runs in isolated tmux session
-# Session persists after CLI exits
-```
-
-### Stop Agent
-
-```bash
-# Graceful shutdown
-mux agent:stop my-dev-agent
-
-# Force kill
-mux agent:stop my-dev-agent --force
-```
-
-### View Agent Logs
-
-```bash
-# View last 100 lines
-mux agent:logs my-dev-agent
-
-# View last 500 lines
-mux agent:logs my-dev-agent --lines 500
-
-# Follow live output (like tail -f)
-mux agent:logs my-dev-agent --follow
-
-# Attach directly to tmux session
-tmux attach -t mindmux-{agent-id}
-```
-
-### View Configuration
-
-```bash
-# Show merged configuration (project-local > global > defaults)
-mux config:show
-```
-
-## Configuration
-
-### Global Configuration
-
-Global configuration is stored in `~/.mindmux/config.json`:
-
-```json
-{
-  "version": "0.1.0",
-  "defaultAgentType": "claude",
-  "defaultModel": {
-    "claude": "claude-opus-4-5-20250929",
-    "gemini": "gemini-2-5-flash",
-    "gpt4": "gpt-4-turbo",
-    "opencode": "opencode-latest"
-  },
-  "timeout": 3600000,
-  "maxConcurrentAgents": 10,
-  "logging": {
-    "level": "info",
-    "enableAgentLogs": true,
-    "maxLogSizeMB": 100
-  },
-  "tmux": {
-    "sessionPrefix": "mindmux",
-    "keepSessionsAlive": true
-  }
-}
-```
-
-### Project-Local Configuration
-
-Create `.mindmux/config.json` in your project to override global settings:
-
-```json
-{
-  "timeout": 1800000,
-  "maxConcurrentAgents": 5
-}
-```
-
-### Configuration Hierarchy
-
-1. **Project-local** (`./.mindmux/config.json`) - highest priority
-2. **Global** (`~/.mindmux/config.json`) - fallback
-3. **Defaults** - hardcoded defaults
-
-## Directory Structure
-
-```
-~/.mindmux/
-├── config.json              # Global settings
-├── agents.json              # Agent definitions
-├── metadata.json            # CLI metadata
-├── logs/                    # Log files
-│   └── agents/              # Per-agent logs
-├── cache/                   # Temporary cache
-│   └── sessions/            # Session state
-└── .gitignore               # Ignore sensitive files
-```
-
-## Agent Capabilities
-
-Valid capabilities:
-- `code-generation` - Generate code from specifications
-- `code-review` - Review and analyze code quality
-- `debugging` - Debug and troubleshoot issues
-- `testing` - Write and run tests
-- `documentation` - Generate documentation
-- `planning` - Create implementation plans
-- `research` - Research technical topics
-- `refactoring` - Refactor and improve code
-
-## Development
-
-```bash
-# Build TypeScript
-npm run build
-
-# Run in development mode
-npm run dev
-
-# Type checking
-npm run typecheck
-
-# Run tests
-npm test
-```
-
-## Architecture
-
-- **ConfigManager**: Handles configuration hierarchy and merging
-- **AgentManager**: CRUD operations for agents
-- **Validators**: Input validation for agent names, types, capabilities
-- **Path Utilities**: Cross-platform path handling
-
-## Contributing
-
-Contributions welcome! Please follow these guidelines:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT © 2026
 
-## Roadmap
+## Credits
 
-- [x] Phase 1: Foundation & Core CLI
-- [x] Phase 2: Tmux Integration & Session Management (CURRENT)
-- [ ] Phase 3: AI Provider Integration
-- [ ] Phase 4: Task Orchestration
-- [ ] Phase 5: Database Migration (PostgreSQL)
-- [ ] Phase 6: Advanced Features (monitoring, metrics, CI/CD)
-
-## Documentation
-
-Complete documentation available in [docs/](./docs/README.md):
-
-### User Documentation
-- **[Getting Started](./docs/GETTING_STARTED.md)** - Installation and quick start (5-10 minutes)
-- **[User Guide](./docs/USER_GUIDE.md)** - Complete feature guide with examples
-- **[Configuration](./docs/CONFIGURATION.md)** - All configuration options
-- **[FAQ](./docs/FAQ.md)** - Frequently asked questions
-- **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
-
-### Developer Documentation
-- **[Architecture](./docs/ARCHITECTURE.md)** - System design and components
-- **[Developer Guide](./docs/DEVELOPER_GUIDE.md)** - Development setup and contributing
-- **[API Documentation](./docs/API.md)** - REST API reference
-- **[OpenAPI Spec](./docs/api/openapi.yaml)** - OpenAPI 3.0 specification
-
-### Operations & Security
-- **[Deployment](./docs/DEPLOYMENT.md)** - Production deployment (systemd, Docker, Kubernetes)
-- **[Security](./docs/SECURITY.md)** - Security best practices and compliance
-
-### Project Information
-- **[Roadmap](./docs/ROADMAP.md)** - Feature roadmap and timeline
-- **[Changelog](./docs/CHANGELOG.md)** - Release history and changes
-
-### Examples
-- **[Agent Configurations](./docs/examples/agent-configs.json)** - Example agent definitions
-- **[Task Workflows](./docs/examples/task-workflows.sh)** - Example workflows
-- **[Docker Compose](./docs/examples/docker-compose.yml)** - Docker development setup
-
-## Support
-
-For issues and questions:
-- **GitHub Issues**: [Report bugs](https://github.com/yourusername/mindmux/issues)
-- **GitHub Discussions**: [Ask questions](https://github.com/yourusername/mindmux/discussions)
-- **Documentation**: [docs/](./docs/README.md)
-
----
-
-Built with TypeScript, Commander.js, and love for automation.
+- Inspired by [agent-deck](https://github.com/asheshgoplani/agent-deck)
+- Built with [@clack/prompts](https://github.com/natemoo-re/clack)
