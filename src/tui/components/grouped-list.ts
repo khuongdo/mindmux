@@ -111,18 +111,18 @@ export function renderGroupedList(
 function renderAgentRow(agent: Agent, isSelected: boolean): string {
   const statusIcon = agent.isRunning ? STATUS_ICONS.running :
                      agent.status === 'busy' ? STATUS_ICONS.waiting :
-                     agent.status === 'unhealthy' ? STATUS_ICONS.error :
+                     agent.status === 'error' ? STATUS_ICONS.error :
                      STATUS_ICONS.idle;
 
   const statusColor = agent.isRunning ? colors.running :
                       agent.status === 'busy' ? colors.waiting :
-                      agent.status === 'unhealthy' ? colors.failed :
+                      agent.status === 'error' ? colors.failed :
                       colors.idle;
 
   const name = truncate(agent.name, 18);
   const status = agent.isRunning ? 'running' :
                  agent.status === 'busy' ? 'busy' :
-                 agent.status === 'unhealthy' ? 'error' :
+                 agent.status === 'error' ? 'error' :
                  'idle';
 
   const parts = [

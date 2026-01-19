@@ -6,7 +6,7 @@
 export type AgentType = 'claude' | 'gemini' | 'gpt4' | 'opencode';
 
 // Agent status
-export type AgentStatus = 'idle' | 'busy' | 'unhealthy';
+export type AgentStatus = 'idle' | 'busy' | 'error' | 'terminated';
 
 // Logging configuration
 export interface LoggingConfig {
@@ -47,6 +47,7 @@ export interface Agent {
   capabilities: string[];          // List of capabilities
   status: AgentStatus;             // Current status
   createdAt: string;               // ISO 8601 timestamp
+  updatedAt?: string;              // ISO 8601 timestamp
   lastActivity?: string;           // ISO 8601 timestamp
   config: AgentConfig;             // Provider-specific config
   sessionName?: string;            // Tmux session name
@@ -80,17 +81,19 @@ export interface Task {
   priority: number;                // 0-100, higher = urgent
   requiredCapabilities: string[];  // Agent must have ALL
   dependsOn?: string[];            // Prerequisite task IDs
-  agentId?: string;                // Assigned agent
+  assignedAgentId?: string;        // Assigned agent ID (primary)
+  agentId?: string;                // Legacy: Assigned agent ID (alias for assignedAgentId)
   createdAt: string;               // ISO 8601 timestamp
   queuedAt?: string;               // When added to queue
   assignedAt?: string;             // When agent assigned
   startedAt?: string;              // When execution began
   completedAt?: string;            // When finished
   result?: string;                 // Output on success
-  error?: string;                  // Error message on failure
+  errorMessage?: string;           // Error message on failure (primary)
+  error?: string;                  // Legacy: Error message (alias for errorMessage)
   retryCount: number;              // Current retry (0-based)
   maxRetries: number;              // Max attempts (default 3)
-  timeout?: number;                // Timeout in ms
+  timeout: number;                 // Timeout in ms
 }
 
 // Task creation options
@@ -101,6 +104,20 @@ export interface CreateTaskOptions {
   dependsOn?: string[];
   timeout?: number;
   maxRetries?: number;
+}
+
+// Session status enum
+export type SessionStatus = 'active' | 'attached' | 'detached' | 'terminated';
+
+// Session definition (tmux session tracking)
+export interface Session {
+  id: string;                        // UUID v4
+  agentId: string;                   // Associated agent
+  tmuxSession: string;               // Tmux session name
+  status: SessionStatus;             // Current status
+  startedAt: string;                 // ISO 8601 timestamp
+  endedAt?: string;                  // ISO 8601 timestamp
+  processId?: number;                // Process ID
 }
 
 // Agents storage structure

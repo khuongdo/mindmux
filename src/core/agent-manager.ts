@@ -18,12 +18,21 @@ import {
   validateAgentsStore,
   safeValidate,
 } from '../utils/json-validator.js';
+import { AgentRepository } from '../persistence/agent-repository.js';
 
 export class AgentManager {
   private configManager: ConfigManager;
+  private agentRepository: AgentRepository | null = null;
 
   constructor(configManager: ConfigManager) {
     this.configManager = configManager;
+  }
+
+  /**
+   * Set agent repository for SQLite persistence (optional)
+   */
+  setRepository(repository: AgentRepository): void {
+    this.agentRepository = repository;
   }
 
   /**
@@ -57,16 +66,35 @@ export class AgentManager {
       },
     };
 
-    // Save to appropriate location (global by default)
-    this.saveAgent(agent);
+    // Save to SQLite if available, otherwise to JSON
+    if (this.agentRepository) {
+      try {
+        this.agentRepository.create(agent);
+      } catch (error) {
+        console.warn('SQLite save failed, falling back to JSON:', error);
+        this.saveAgent(agent);
+      }
+    } else {
+      this.saveAgent(agent);
+    }
 
     return agent;
   }
 
   /**
-   * List all agents (merged from global and project)
+   * List all agents (merged from global and project, or from SQLite if available)
    */
   listAgents(): Agent[] {
+    // If SQLite repository is available, use it
+    if (this.agentRepository) {
+      try {
+        return this.agentRepository.getAll();
+      } catch (error) {
+        console.warn('SQLite retrieval failed, falling back to JSON:', error);
+      }
+    }
+
+    // Fallback to JSON-based storage
     const globalAgents = this.loadGlobalAgents();
     const projectAgents = this.loadProjectAgents();
 

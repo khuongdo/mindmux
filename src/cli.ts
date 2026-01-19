@@ -28,9 +28,15 @@ import { AgentLifecycle } from './core/agent-lifecycle.js';
 import { SessionManager } from './core/session-manager.js';
 import { TaskQueueManager } from './core/task-queue-manager.js';
 import { isTmuxAvailable } from './utils/tmux-check.js';
+import {
+  initializePersistence,
+  shutdownPersistence,
+  PersistenceServices,
+} from './persistence/persistence-manager.js';
 
 // Singleton instances
 let taskQueueManager: TaskQueueManager | null = null;
+let persistenceServices: PersistenceServices | null = null;
 
 function getTaskQueueManager(): TaskQueueManager {
   if (!taskQueueManager) {
@@ -38,6 +44,11 @@ function getTaskQueueManager(): TaskQueueManager {
     const agentManager = new AgentManager(configManager);
     const tmuxController = new TmuxController();
     const agentLifecycle = new AgentLifecycle(tmuxController, agentManager);
+
+    // Attach SQLite repository if available
+    if (persistenceServices) {
+      agentManager.setRepository(persistenceServices.agentRepository);
+    }
 
     taskQueueManager = new TaskQueueManager(
       agentManager,
@@ -51,6 +62,48 @@ function getTaskQueueManager(): TaskQueueManager {
     );
   }
   return taskQueueManager;
+}
+
+/**
+ * Initialize persistence layer on startup
+ */
+async function initializePersistenceLayer() {
+  try {
+    persistenceServices = initializePersistence();
+  } catch (error) {
+    console.warn(
+      'Persistence initialization failed, continuing with JSON fallback:',
+      error instanceof Error ? error.message : String(error)
+    );
+    // Continue without persistence - JSON fallback will be used
+  }
+}
+
+/**
+ * Perform startup recovery
+ */
+async function performStartupRecovery() {
+  try {
+    if (!persistenceServices) {
+      return;
+    }
+
+    // Recover incomplete tasks
+    const incompleteTasks = persistenceServices.taskRepository.getIncomplete();
+    if (incompleteTasks.length > 0) {
+      console.log(`Found ${incompleteTasks.length} incomplete task(s) from previous session`);
+      // Tasks remain in queue for reprocessing
+    }
+
+    // Find and cleanup orphaned sessions
+    const orphanedSessions = persistenceServices.sessionRepository.findOrphaned();
+    if (orphanedSessions.length > 0) {
+      console.log(`Found ${orphanedSessions.length} orphaned session(s)`);
+      // Sessions will be terminated on next health check
+    }
+  } catch (error) {
+    console.warn('Startup recovery failed:', error instanceof Error ? error.message : String(error));
+  }
 }
 
 // Initialize session recovery on startup
@@ -75,6 +128,43 @@ async function initializeSessionRecovery() {
   }
 }
 
+/**
+ * Run all startup routines
+ */
+async function runStartupRoutines() {
+  // Initialize persistence first
+  await initializePersistenceLayer();
+
+  // Perform recovery
+  await performStartupRecovery();
+
+  // Initialize session recovery
+  await initializeSessionRecovery();
+}
+
+/**
+ * Graceful shutdown
+ */
+process.on('exit', () => {
+  if (persistenceServices) {
+    shutdownPersistence(persistenceServices);
+  }
+});
+
+process.on('SIGINT', () => {
+  if (persistenceServices) {
+    shutdownPersistence(persistenceServices);
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  if (persistenceServices) {
+    shutdownPersistence(persistenceServices);
+  }
+  process.exit(0);
+});
+
 const program = new Command();
 
 program
@@ -82,8 +172,8 @@ program
   .description('MindMux - Multi-Agent AI CLI for orchestrating AI agents')
   .version('0.1.0')
   .hook('preAction', async () => {
-    // Run session recovery before first command
-    await initializeSessionRecovery();
+    // Run all startup routines before first command
+    await runStartupRoutines();
   });
 
 // Register agent commands

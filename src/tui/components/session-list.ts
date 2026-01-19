@@ -91,7 +91,7 @@ function renderAgentRow(agent: Agent, isSelected: boolean): string {
 function getDisplayStatus(status: AgentStatus, isRunning?: boolean): string {
   if (isRunning) return 'running';
   if (status === 'busy') return 'busy';
-  if (status === 'unhealthy') return 'error';
+  if (status === 'error') return 'error';
   return 'idle';
 }
 
@@ -101,7 +101,7 @@ function getDisplayStatus(status: AgentStatus, isRunning?: boolean): string {
 function getStatusIcon(status: AgentStatus, isRunning?: boolean): string {
   if (isRunning) return STATUS_ICONS.running;
   if (status === 'busy') return STATUS_ICONS.waiting;
-  if (status === 'unhealthy') return STATUS_ICONS.error;
+  if (status === 'error') return STATUS_ICONS.error;
   return STATUS_ICONS.idle;
 }
 
@@ -111,7 +111,7 @@ function getStatusIcon(status: AgentStatus, isRunning?: boolean): string {
 function getStatusColor(status: AgentStatus, isRunning?: boolean) {
   if (isRunning) return colors.running;
   if (status === 'busy') return colors.waiting;
-  if (status === 'unhealthy') return colors.failed;
+  if (status === 'error') return colors.failed;
   return colors.idle;
 }
 
@@ -123,7 +123,7 @@ function generateSummary(agents: Agent[]): string {
     running: agents.filter(a => a.isRunning).length,
     busy: agents.filter(a => a.status === 'busy').length,
     idle: agents.filter(a => a.status === 'idle' && !a.isRunning).length,
-    error: agents.filter(a => a.status === 'unhealthy').length,
+    error: agents.filter(a => a.status === 'error').length,
   };
 
   const parts: string[] = [];

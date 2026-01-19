@@ -132,7 +132,7 @@ export class AgentLifecycle {
     // Update agent status if session state changed
     if (agent.isRunning && !sessionExists) {
       agent.isRunning = false;
-      agent.status = 'unhealthy';
+      agent.status = 'error';
       this.agentManager.updateAgent(agent);
     }
 
@@ -236,6 +236,7 @@ export class AgentLifecycle {
       requiredCapabilities: [],
       retryCount: 0,
       maxRetries: 3,
+      timeout: 300000,  // 5 minutes default
       createdAt: new Date().toISOString(),
     };
 

@@ -19,12 +19,12 @@ export class CapabilityMatcher {
     // Wildcard - any agent can handle
     if (task.requiredCapabilities.length === 0 ||
         task.requiredCapabilities.includes('*')) {
-      return agents.filter(a => a.status !== 'unhealthy');
+      return agents.filter(a => a.status !== 'error');
     }
 
     return agents.filter(agent => {
-      // Skip unhealthy agents
-      if (agent.status === 'unhealthy') return false;
+      // Skip error agents
+      if (agent.status === 'error') return false;
 
       // Check if agent has ALL required capabilities
       return task.requiredCapabilities.every(
@@ -53,7 +53,7 @@ export class CapabilityMatcher {
    * Check if a specific agent can handle the task
    */
   canAgentHandleTask(agent: Agent, task: Task): boolean {
-    if (agent.status === 'unhealthy') return false;
+    if (agent.status === 'error') return false;
 
     if (task.requiredCapabilities.length === 0 ||
         task.requiredCapabilities.includes('*')) {

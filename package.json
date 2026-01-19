@@ -40,6 +40,7 @@
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "ansis": "^4.2.0",
+    "better-sqlite3": "^9.2.2",
     "commander": "^13.1.0",
     "dotenv": "^17.2.3",
     "node-tmux": "^1.0.2",
@@ -47,6 +48,7 @@
     "redis": "^4.6.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.8",
     "@types/node": "^25.0.9",
     "@vitest/coverage-v8": "^3.2.4",
     "nodemon": "^3.1.11",
