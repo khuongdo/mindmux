@@ -6,7 +6,7 @@
 import { TmuxController } from '../core/tmux-controller.js';
 import { detectAITool, isAITool } from './ai-tool-detector.js';
 import { detectStatus } from './status-detector.js';
-import type { AISession } from '../types/index.js';
+import type { AISession, AITool } from '../types/index.js';
 
 export class SessionScanner {
   constructor(private tmux: TmuxController) {}
@@ -23,14 +23,29 @@ export class SessionScanner {
 
       for (const { paneId, windowId } of panes) {
         const processName = await this.tmux.getProcessName(paneId);
+        let toolType: AITool | null = null;
 
-        // Skip non-AI processes
-        if (!isAITool(processName)) {
+        // Direct process name detection
+        if (isAITool(processName)) {
+          toolType = detectAITool(processName);
+        }
+        // Fallback: Check output for AI tools running in shells
+        else if (this.isShell(processName)) {
+          const output = await this.tmux.captureOutput(paneId, 20);
+          toolType = this.detectAIToolFromOutput(output);
+
+          // Additional hint: check session name pattern (mindmux-{tool}-*)
+          if (!toolType && sessionName.startsWith('mindmux-')) {
+            toolType = this.detectAIToolFromSessionName(sessionName);
+          }
+        }
+
+        // Skip if no AI tool detected
+        if (!toolType) {
           continue;
         }
 
         // Extract session metadata
-        const toolType = detectAITool(processName) || 'unknown';
         const projectPath = await this.tmux.getWorkingDirectory(paneId);
         const output = await this.tmux.captureOutput(paneId, 20);
         const status = detectStatus(output);
@@ -51,6 +66,58 @@ export class SessionScanner {
     }
 
     return sessions;
+  }
+
+  /**
+   * Check if process is a shell
+   */
+  private isShell(processName: string): boolean {
+    const lower = processName.toLowerCase();
+    return lower === 'bash' || lower === 'sh' || lower === 'zsh' || lower === 'fish';
+  }
+
+  /**
+   * Detect AI tool from pane output content
+   */
+  private detectAIToolFromOutput(output: string): AITool | null {
+    const lower = output.toLowerCase();
+
+    // Check for AI tool signatures in output
+    if (lower.includes('claude') || lower.includes('anthropic')) {
+      return 'claude';
+    }
+    if (lower.includes('gemini') || lower.includes('google ai')) {
+      return 'gemini';
+    }
+    if (lower.includes('opencode')) {
+      return 'opencode';
+    }
+    if (lower.includes('cursor')) {
+      return 'cursor';
+    }
+    if (lower.includes('aider')) {
+      return 'aider';
+    }
+    if (lower.includes('codex')) {
+      return 'codex';
+    }
+
+    return null;
+  }
+
+  /**
+   * Detect AI tool from session name pattern (mindmux-{tool}-timestamp)
+   */
+  private detectAIToolFromSessionName(sessionName: string): AITool | null {
+    const match = sessionName.match(/^mindmux-([a-z]+)-\d+$/);
+    if (match && match[1]) {
+      const tool = match[1];
+      const detected = detectAITool(tool);
+      if (detected) {
+        return detected;
+      }
+    }
+    return null;
   }
 
   /**
