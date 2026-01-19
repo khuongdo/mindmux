@@ -19,10 +19,14 @@ import {
   safeValidate,
 } from '../utils/json-validator.js';
 import { AgentRepository } from '../persistence/agent-repository.js';
+import { getMetricsCollector } from '../monitoring/metrics-collector.js';
+import { getEventEmitter } from '../monitoring/event-emitter.js';
+import { createLogger } from '../monitoring/logger.js';
 
 export class AgentManager {
   private configManager: ConfigManager;
   private agentRepository: AgentRepository | null = null;
+  private logger = createLogger('AgentManager');
 
   constructor(configManager: ConfigManager) {
     this.configManager = configManager;
@@ -71,12 +75,35 @@ export class AgentManager {
       try {
         this.agentRepository.create(agent);
       } catch (error) {
-        console.warn('SQLite save failed, falling back to JSON:', error);
+        this.logger.warn('agent_persistence_fallback', {
+          agentId: agent.id,
+          reason: error instanceof Error ? error.message : 'unknown',
+        });
         this.saveAgent(agent);
       }
     } else {
       this.saveAgent(agent);
     }
+
+    // Emit metrics
+    getMetricsCollector().incrementCounter('agents_created');
+
+    // Emit event
+    getEventEmitter().broadcast({
+      eventType: 'agent:created',
+      data: {
+        agent_id: agent.id,
+        name: agent.name,
+        type: agent.type,
+        capabilities: agent.capabilities,
+      },
+    });
+
+    this.logger.info('agent_created', {
+      agentId: agent.id,
+      name: agent.name,
+      type: agent.type,
+    });
 
     return agent;
   }
@@ -144,6 +171,20 @@ export class AgentManager {
     if (projectPath) {
       this.removeAgentFromStore(agent.id, projectPath);
     }
+
+    // Emit metrics
+    getMetricsCollector().incrementCounter('agents_deleted');
+
+    // Emit event
+    getEventEmitter().broadcast({
+      eventType: 'agent:deleted',
+      data: { agent_id: agent.id, name: agent.name },
+    });
+
+    this.logger.info('agent_deleted', {
+      agentId: agent.id,
+      name: agent.name,
+    });
 
     return true;
   }

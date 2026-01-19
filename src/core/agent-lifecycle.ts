@@ -8,15 +8,38 @@ import { TmuxController } from './tmux-controller.js';
 import { AgentManager } from './agent-manager.js';
 import { TaskExecutor } from './task-executor.js';
 import { Task } from './types.js';
+import { getMetricsCollector } from '../monitoring/metrics-collector.js';
+import { getEventEmitter } from '../monitoring/event-emitter.js';
+import { createLogger } from '../monitoring/logger.js';
 
 export class AgentLifecycle {
   private taskExecutor: TaskExecutor;
+  private logger = createLogger('AgentLifecycle');
 
   constructor(
     private tmuxController: TmuxController,
     private agentManager: AgentManager
   ) {
     this.taskExecutor = new TaskExecutor(tmuxController);
+  }
+
+  /**
+   * Update agent status with monitoring
+   */
+  private updateAgentStatus(agent: any, newStatus: string): void {
+    const oldStatus = agent.status;
+    agent.status = newStatus;
+    agent.lastActivity = new Date().toISOString();
+
+    // Emit event if status changed
+    if (oldStatus !== newStatus) {
+      getEventEmitter().emitAgentStatusChanged(agent.id, newStatus);
+      this.logger.debug('agent_status_changed', {
+        agentId: agent.id,
+        oldStatus,
+        newStatus,
+      });
+    }
   }
 
   /**
@@ -46,16 +69,23 @@ export class AgentLifecycle {
       // Update agent with session info
       agent.sessionName = sessionName;
       agent.isRunning = true;
-      agent.status = 'idle';
-      agent.lastActivity = new Date().toISOString();
+      this.updateAgentStatus(agent, 'idle');
       this.agentManager.updateAgent(agent);
 
       // Spawn CLI process in session
       await this.taskExecutor.spawnCLI(agent);
 
-      console.log(`Agent ${agent.name} started with ${agent.type} CLI`);
+      this.logger.info('agent_started', {
+        agentId: agent.id,
+        name: agent.name,
+        sessionName,
+      });
 
     } catch (error) {
+      this.logger.error('agent_start_failed', {
+        agentId: agent.id,
+      }, error instanceof Error ? error : new Error(String(error)));
+      getMetricsCollector().recordError();
       throw new Error(`Failed to start agent: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
@@ -87,11 +117,19 @@ export class AgentLifecycle {
 
       // Update agent status
       agent.isRunning = false;
-      agent.status = 'idle';
-      agent.lastActivity = new Date().toISOString();
+      this.updateAgentStatus(agent, 'idle');
       this.agentManager.updateAgent(agent);
 
+      this.logger.info('agent_stopped', {
+        agentId: agent.id,
+        name: agent.name,
+      });
+
     } catch (error) {
+      this.logger.error('agent_stop_failed', {
+        agentId: agent.id,
+      }, error instanceof Error ? error : new Error(String(error)));
+      getMetricsCollector().recordError();
       throw new Error(`Failed to stop agent: ${error instanceof Error ? error.message : String(error)}`);
     }
   }

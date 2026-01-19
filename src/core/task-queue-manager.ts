@@ -10,6 +10,9 @@ import { CapabilityMatcher } from './capability-matcher.js';
 import { LoadBalancer, LoadBalancingStrategy } from './load-balancer.js';
 import { DependencyResolver } from './dependency-resolver.js';
 import { AgentLifecycle } from './agent-lifecycle.js';
+import { getMetricsCollector } from '../monitoring/metrics-collector.js';
+import { getEventEmitter } from '../monitoring/event-emitter.js';
+import { createLogger } from '../monitoring/logger.js';
 
 export interface TaskQueueConfig {
   defaultPriority: number;
@@ -34,6 +37,7 @@ export class TaskQueueManager {
   private loadBalancer: LoadBalancer;
   private dependencyResolver: DependencyResolver;
   private isProcessing: boolean = false;
+  private logger = createLogger('TaskQueueManager');
 
   constructor(
     private agentManager: AgentManager,
@@ -57,6 +61,7 @@ export class TaskQueueManager {
       requiredCapabilities: options.requiredCapabilities || [],
       dependsOn: options.dependsOn,
       createdAt: new Date().toISOString(),
+      queuedAt: new Date().toISOString(),
       retryCount: 0,
       maxRetries: options.maxRetries ?? this.config.defaultMaxRetries,
       timeout: options.timeout ?? this.config.defaultTimeout,
@@ -64,10 +69,22 @@ export class TaskQueueManager {
 
     this.tasks.set(task.id, task);
 
+    // Emit metrics
+    getMetricsCollector().incrementCounter('tasks_queued');
+
+    // Emit event
+    getEventEmitter().emitTaskQueued(task.id, task.priority, task.requiredCapabilities);
+
     // Check dependencies
     if (this.dependencyResolver.canExecute(task, this.tasks)) {
       this.addToQueue(task);
     }
+
+    this.logger.info('task_enqueued', {
+      taskId: task.id,
+      priority: task.priority,
+      capabilities: task.requiredCapabilities,
+    });
 
     // Trigger queue processing
     this.processQueue();
