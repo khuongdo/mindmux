@@ -18,7 +18,14 @@
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'Linting not configured yet'",
+    "docker:build": "docker build -f docker/Dockerfile -t mindmux:latest .",
+    "docker:build-dev": "docker-compose -f docker/docker-compose.yml build",
+    "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker-compose -f docker/docker-compose.yml logs -f mindmux",
+    "prepare": "node -e \"try { require('husky').install() } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e }\""
   },
   "engines": {
     "node": ">=24.0.0",
@@ -35,8 +42,22 @@
     "multi-agent",
     "orchestration"
   ],
-  "author": "",
+  "author": "Your Name <your.email@example.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mindmux"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/mindmux/issues"
+  },
+  "homepage": "https://github.com/yourusername/mindmux#readme",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "ansis": "^4.2.0",
