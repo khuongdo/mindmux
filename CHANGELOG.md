@@ -5,6 +5,20 @@ All notable changes to MindMux will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-01-19
+
+### Added
+- Session creation wizard with 'n' key in TUI dashboard
+- Interactive workflow: tool selection → path input → optional label
+- Support for creating sessions with 6 AI tools: Claude Code, Gemini CLI, OpenCode, Cursor, Aider, Codex
+- Comprehensive path validation and AI tool initialization detection
+- Session creation success/error feedback with troubleshooting guidance
+
+### Security
+- Command injection prevention via shell argument sanitization
+- Input validation with max length enforcement (session name: 200 chars, path: 500 chars)
+- Safe tmux command execution with proper quoting
+
 ## [2.0.0] - 2026-01-19
 
 ### Added

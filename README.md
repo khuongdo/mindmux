@@ -56,6 +56,7 @@ mindmux  # Launch dashboard
 **Keyboard Shortcuts:**
 - `j/k` or `↓/↑` - Navigate sessions
 - `Enter` - Attach to session
+- `n` - Create new session
 - `f` - Fork session (clone with history)
 - `m` - Manage MCP servers
 - `l` - Label session
@@ -122,6 +123,19 @@ claude code
 mindmux
 # Navigate to feature-dev session, press 'f'
 # New session created with full conversation history
+```
+
+### Workflow: Create New Session
+
+```bash
+# Launch MindMux
+mindmux
+
+# Press 'n' to create new session
+# Select AI tool (1-6)
+# Enter project path or press Enter for current directory
+# Optionally add a session label
+# MindMux creates tmux session and starts AI tool
 ```
 
 ### Workflow: MCP Toggle
