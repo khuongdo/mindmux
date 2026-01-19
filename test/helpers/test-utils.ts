@@ -52,13 +52,16 @@ export class TestDataBuilder {
     return {
       id: 'test-agent-1',
       name: 'test-agent',
-      type: 'claude',
-      model: 'claude-opus-4-5-20250929',
+      type: 'claude' as const,
       capabilities: ['code-generation', 'code-review'],
-      status: 'stopped' as const,
-      sessionId: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      status: 'idle' as const,
+      createdAt: new Date().toISOString(),
+      config: {
+        model: 'claude-opus-4-5-20250929',
+        maxConcurrentTasks: 1,
+        timeout: 3600000,
+      },
+      isRunning: false,
       ...overrides,
     };
   }
@@ -66,13 +69,14 @@ export class TestDataBuilder {
   static task(overrides = {}) {
     return {
       id: 'test-task-1',
-      name: 'test-task',
       prompt: 'Write a test',
       status: 'pending' as const,
-      priority: 'medium' as const,
-      assignedAgentId: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      priority: 50,
+      requiredCapabilities: [] as string[],
+      retryCount: 0,
+      maxRetries: 3,
+      timeout: 3600000,
+      createdAt: new Date().toISOString(),
       ...overrides,
     };
   }

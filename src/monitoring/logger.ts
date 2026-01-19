@@ -51,31 +51,45 @@ class Logger {
     };
   }
 
-  private output(entry: LogEntry): void {
-    console.log(JSON.stringify(entry));
+  private output(level: LogLevel, entry: LogEntry): void {
+    const json = JSON.stringify(entry);
+    switch (level) {
+      case 'error':
+        console.error(json);
+        break;
+      case 'warn':
+        console.warn(json);
+        break;
+      case 'info':
+        console.log(json);
+        break;
+      case 'debug':
+        console.log(json);
+        break;
+    }
   }
 
   error(action: string, data?: Record<string, unknown>, error?: Error | string): void {
     if (this.shouldLog('error')) {
-      this.output(this.formatEntry('error', action, data, error));
+      this.output('error', this.formatEntry('error', action, data, error));
     }
   }
 
   warn(action: string, data?: Record<string, unknown>): void {
     if (this.shouldLog('warn')) {
-      this.output(this.formatEntry('warn', action, data));
+      this.output('warn', this.formatEntry('warn', action, data));
     }
   }
 
   info(action: string, data?: Record<string, unknown>): void {
     if (this.shouldLog('info')) {
-      this.output(this.formatEntry('info', action, data));
+      this.output('info', this.formatEntry('info', action, data));
     }
   }
 
   debug(action: string, data?: Record<string, unknown>): void {
     if (this.shouldLog('debug')) {
-      this.output(this.formatEntry('debug', action, data));
+      this.output('debug', this.formatEntry('debug', action, data));
     }
   }
 }

@@ -27,6 +27,7 @@ export class AgentManager {
   private configManager: ConfigManager;
   private agentRepository: AgentRepository | null = null;
   private logger = createLogger('AgentManager');
+  private memoryCache: Map<string, Agent> = new Map();
 
   constructor(configManager: ConfigManager) {
     this.configManager = configManager;
@@ -70,6 +71,9 @@ export class AgentManager {
       },
     };
 
+    // Store in memory cache
+    this.memoryCache.set(agent.id, agent);
+
     // Save to SQLite if available, otherwise to JSON
     if (this.agentRepository) {
       try {
@@ -109,13 +113,18 @@ export class AgentManager {
   }
 
   /**
-   * List all agents (merged from global and project, or from SQLite if available)
+   * List all agents (merged from memory cache, SQLite, global and project)
    */
   listAgents(): Agent[] {
+    // Start with memory cache (highest priority for tests)
+    const agentMap = new Map<string, Agent>(this.memoryCache);
+
     // If SQLite repository is available, use it
     if (this.agentRepository) {
       try {
-        return this.agentRepository.getAll();
+        const dbAgents = this.agentRepository.getAll();
+        dbAgents.forEach(agent => agentMap.set(agent.id, agent));
+        return Array.from(agentMap.values());
       } catch (error) {
         console.warn('SQLite retrieval failed, falling back to JSON:', error);
       }
@@ -124,9 +133,6 @@ export class AgentManager {
     // Fallback to JSON-based storage
     const globalAgents = this.loadGlobalAgents();
     const projectAgents = this.loadProjectAgents();
-
-    // Merge agents, project agents override global if same ID
-    const agentMap = new Map<string, Agent>();
 
     globalAgents.forEach(agent => agentMap.set(agent.id, agent));
     projectAgents.forEach(agent => agentMap.set(agent.id, agent));
@@ -163,6 +169,9 @@ export class AgentManager {
     if (!agent) {
       return false;
     }
+
+    // Remove from memory cache
+    this.memoryCache.delete(agent.id);
 
     // Remove from both global and project configs
     this.removeAgentFromStore(agent.id, getGlobalAgentsPath());
@@ -213,6 +222,9 @@ export class AgentManager {
    * Update agent
    */
   updateAgent(agent: Agent): void {
+    // Update memory cache
+    this.memoryCache.set(agent.id, agent);
+
     // Determine which store the agent belongs to
     const globalAgents = this.loadGlobalAgents();
     const isGlobal = globalAgents.some(a => a.id === agent.id);

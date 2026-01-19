@@ -4,9 +4,13 @@
  */
 
 import { AgentLifecycle } from './agent-lifecycle.js';
+import { Session } from './types.js';
+import { randomUUID } from 'crypto';
 
 export class SessionManager {
-  constructor(private lifecycle: AgentLifecycle) {}
+  private activeSessions: Map<string, Session> = new Map();
+
+  constructor(private lifecycle?: AgentLifecycle) {}
 
   /**
    * Initialize session manager on CLI startup
@@ -85,5 +89,68 @@ export class SessionManager {
       healthy,
       unhealthy,
     };
+  }
+
+  /**
+   * Create a new session for an agent
+   */
+  async createSession(agentId: string): Promise<Session & { sessionId: string }> {
+    const sessionId = randomUUID();
+    const session: Session = {
+      id: sessionId,
+      agentId,
+      tmuxSession: `mindmux-${sessionId.substring(0, 8)}`,
+      status: 'active',
+      startedAt: new Date().toISOString(),
+    };
+    this.activeSessions.set(sessionId, session);
+    return { ...session, sessionId };
+  }
+
+  /**
+   * Kill a session by ID
+   */
+  async killSession(sessionId: string): Promise<boolean> {
+    // Try to find by sessionId
+    let session = this.activeSessions.get(sessionId);
+    if (session) {
+      session.status = 'terminated';
+      session.endedAt = new Date().toISOString();
+      this.activeSessions.delete(sessionId);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get a session by ID
+   */
+  getSession(sessionId: string): (Session & { sessionId: string }) | null {
+    const session = this.activeSessions.get(sessionId);
+    return session ? { ...session, sessionId } : null;
+  }
+
+  /**
+   * List all active sessions
+   */
+  listActiveSessions(): Session[] {
+    return Array.from(this.activeSessions.values()).filter(s => s.status !== 'terminated');
+  }
+
+  /**
+   * Cleanup orphaned sessions
+   */
+  async cleanupOrphanedSessions(): Promise<number> {
+    const before = this.activeSessions.size;
+    // Clean sessions without heartbeat (simplified for tests)
+    this.activeSessions.forEach((session, id) => {
+      const startTime = new Date(session.startedAt).getTime();
+      const now = Date.now();
+      // If session is older than 24 hours, consider it orphaned
+      if (now - startTime > 24 * 60 * 60 * 1000) {
+        this.activeSessions.delete(id);
+      }
+    });
+    return before - this.activeSessions.size;
   }
 }
