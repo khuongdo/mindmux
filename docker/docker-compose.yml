@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+  mindmux:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    container_name: mindmux
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+      - DATABASE_URL=postgresql://mindmux:mindmux@postgres:5432/mindmux
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - mindmux-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mindmux-postgres
+    environment:
+      - POSTGRES_USER=mindmux
+      - POSTGRES_PASSWORD=mindmux
+      - POSTGRES_DB=mindmux
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - mindmux-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindmux"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: mindmux-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - mindmux-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  mindmux-network:
+    driver: bridge

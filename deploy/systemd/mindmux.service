@@ -1,0 +1,42 @@
+[Unit]
+Description=MindMux - Multi-Agent AI CLI
+Documentation=https://github.com/yourusername/mindmux
+After=network.target
+
+[Service]
+Type=simple
+User=mindmux
+Group=mindmux
+WorkingDirectory=/opt/mindmux
+
+# Environment variables
+EnvironmentFile=/etc/mindmux/.env
+Environment=NODE_ENV=production
+Environment=LOG_LEVEL=info
+
+# Startup
+ExecStart=/usr/local/bin/mindmux
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=600
+StartLimitBurst=3
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/mindmux /var/lib/mindmux
+
+# Resource limits
+LimitNOFILE=65535
+LimitNPROC=512
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mindmux
+
+[Install]
+WantedBy=multi-user.target

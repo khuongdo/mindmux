@@ -1,0 +1,182 @@
+groups:
+  - name: mindmux_alerts
+    interval: 30s
+    rules:
+      # Application alerts
+      - alert: HighErrorRate
+        expr: 'rate(mindmux_errors_total[5m]) > 0.05'
+        for: 5m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: 'MindMux has high error rate'
+          description: 'Error rate is {{ $value | humanizePercentage }} over last 5 minutes'
+
+      - alert: HighMemoryUsage
+        expr: 'process_resident_memory_bytes{job="mindmux"} / 1024 / 1024 > 800'
+        for: 10m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: 'MindMux memory usage is high'
+          description: 'Memory usage is {{ $value | humanize }}MB'
+
+      - alert: HighCPUUsage
+        expr: 'rate(process_cpu_seconds_total{job="mindmux"}[5m]) > 0.8'
+        for: 10m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: 'MindMux CPU usage is high'
+          description: 'CPU usage is {{ $value | humanizePercentage }}'
+
+      - alert: NoTasksProcessed
+        expr: 'increase(mindmux_tasks_completed_total[30m]) == 0'
+        for: 30m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: 'No tasks processed in last 30 minutes'
+          description: 'Task processing appears to be stalled'
+
+      - alert: ApplicationDown
+        expr: 'up{job="mindmux"} == 0'
+        for: 1m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: 'MindMux is down'
+          description: 'MindMux service is not responding'
+
+      # Database alerts
+      - alert: DatabaseConnectionFailed
+        expr: 'mindmux_database_connection_errors_total > 0'
+        for: 5m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: 'Database connection failed'
+          description: 'Cannot connect to PostgreSQL database'
+
+      - alert: DatabaseConnectionPoolExhausted
+        expr: 'mindmux_database_connections_active / mindmux_database_connections_max > 0.9'
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: 'Database connection pool nearly exhausted'
+          description: 'Active connections: {{ $value | humanizePercentage }}'
+
+      - alert: DatabaseSlowQueries
+        expr: 'rate(mindmux_database_slow_queries_total[5m]) > 0.5'
+        for: 10m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: 'High rate of slow database queries'
+          description: 'Rate: {{ $value | humanize }}/sec'
+
+      # Redis alerts
+      - alert: RedisDown
+        expr: 'up{job="redis-exporter"} == 0'
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: 'Redis is down'
+          description: 'Redis cache is not responding'
+
+      - alert: RedisMemoryHigh
+        expr: 'redis_memory_used_bytes / redis_memory_max_bytes > 0.85'
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: 'Redis memory usage is high'
+          description: 'Memory usage: {{ $value | humanizePercentage }}'
+
+      - alert: RedisEvictions
+        expr: 'increase(redis_evicted_keys_total[5m]) > 100'
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: 'Redis is evicting keys'
+          description: 'Keys evicted in last 5 minutes: {{ $value | humanize }}'
+
+      # System alerts
+      - alert: PostgresDown
+        expr: 'up{job="postgres-exporter"} == 0'
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: 'PostgreSQL is down'
+          description: 'PostgreSQL server is not responding'
+
+      - alert: HighSystemLoad
+        expr: 'node_load15 > on(instance) count(node_cpu_seconds_total{mode="system"}) by (instance)'
+        for: 15m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: 'High system load detected'
+          description: 'Load: {{ $value | humanize }}'
+
+      - alert: DiskSpaceLow
+        expr: 'node_filesystem_avail_bytes{device!~"tmpfs"} / node_filesystem_size_bytes < 0.1'
+        for: 5m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: 'Low disk space'
+          description: 'Available space: {{ $value | humanizePercentage }}'
+
+  - name: mindmux_slo
+    interval: 1m
+    rules:
+      # SLO: 99.9% uptime
+      - alert: SLOViolation_Uptime
+        expr: 'up{job="mindmux"} == 0'
+        for: 5m
+        labels:
+          severity: critical
+          slo: 'uptime_99_9'
+        annotations:
+          summary: 'SLO Violation: MindMux uptime SLO'
+
+      # SLO: 95th percentile latency < 500ms
+      - alert: SLOViolation_Latency
+        expr: 'histogram_quantile(0.95, rate(mindmux_request_duration_seconds_bucket[5m])) > 0.5'
+        for: 10m
+        labels:
+          severity: warning
+          slo: 'latency_p95_500ms'
+        annotations:
+          summary: 'SLO Violation: Response latency SLO'
+          description: 'P95 latency: {{ $value | humanizeDuration }}'
+
+      # SLO: Error rate < 0.1%
+      - alert: SLOViolation_ErrorRate
+        expr: 'rate(mindmux_errors_total[5m]) / rate(mindmux_requests_total[5m]) > 0.001'
+        for: 5m
+        labels:
+          severity: critical
+          slo: 'error_rate_0_1'
+        annotations:
+          summary: 'SLO Violation: Error rate SLO'
+          description: 'Error rate: {{ $value | humanizePercentage }}'
