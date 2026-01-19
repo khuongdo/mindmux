@@ -260,11 +260,42 @@ MIT License - see LICENSE file for details
 - [ ] Phase 5: Database Migration (PostgreSQL)
 - [ ] Phase 6: Advanced Features (monitoring, metrics, CI/CD)
 
+## Documentation
+
+Complete documentation available in [docs/](./docs/README.md):
+
+### User Documentation
+- **[Getting Started](./docs/GETTING_STARTED.md)** - Installation and quick start (5-10 minutes)
+- **[User Guide](./docs/USER_GUIDE.md)** - Complete feature guide with examples
+- **[Configuration](./docs/CONFIGURATION.md)** - All configuration options
+- **[FAQ](./docs/FAQ.md)** - Frequently asked questions
+- **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+### Developer Documentation
+- **[Architecture](./docs/ARCHITECTURE.md)** - System design and components
+- **[Developer Guide](./docs/DEVELOPER_GUIDE.md)** - Development setup and contributing
+- **[API Documentation](./docs/API.md)** - REST API reference
+- **[OpenAPI Spec](./docs/api/openapi.yaml)** - OpenAPI 3.0 specification
+
+### Operations & Security
+- **[Deployment](./docs/DEPLOYMENT.md)** - Production deployment (systemd, Docker, Kubernetes)
+- **[Security](./docs/SECURITY.md)** - Security best practices and compliance
+
+### Project Information
+- **[Roadmap](./docs/ROADMAP.md)** - Feature roadmap and timeline
+- **[Changelog](./docs/CHANGELOG.md)** - Release history and changes
+
+### Examples
+- **[Agent Configurations](./docs/examples/agent-configs.json)** - Example agent definitions
+- **[Task Workflows](./docs/examples/task-workflows.sh)** - Example workflows
+- **[Docker Compose](./docs/examples/docker-compose.yml)** - Docker development setup
+
 ## Support
 
 For issues and questions:
-- GitHub Issues: https://github.com/yourusername/mindmux/issues
-- Documentation: [Coming soon]
+- **GitHub Issues**: [Report bugs](https://github.com/yourusername/mindmux/issues)
+- **GitHub Discussions**: [Ask questions](https://github.com/yourusername/mindmux/discussions)
+- **Documentation**: [docs/](./docs/README.md)
 
 ---
 
