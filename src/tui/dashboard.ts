@@ -7,19 +7,23 @@ import { TmuxController } from '../core/tmux-controller.js';
 import { SessionScanner } from '../discovery/session-scanner.js';
 import { SessionForker } from '../operations/session-fork.js';
 import { MCPManager } from '../operations/mcp-manager.js';
+import { SessionCreator } from '../operations/session-creator.js';
 import { getStatusSymbol, getStatusColor } from '../discovery/status-detector.js';
 import { KeyboardHandler } from './keyboard-handler.js';
 import { colors } from './utils/colors.js';
 import { boxTop, boxBottom } from './utils/formatters.js';
 import { loadLabels, saveLabels } from '../config/config-loader.js';
-import type { AISession } from '../types/index.js';
+import type { AISession, AITool } from '../types/index.js';
 import * as readline from 'readline';
+import { existsSync } from 'fs';
+import { resolve as resolvePath } from 'path';
 
 export class Dashboard {
   private tmux: TmuxController;
   private scanner: SessionScanner;
   private forker: SessionForker;
   private mcpManager: MCPManager;
+  private creator: SessionCreator;
   private keyboard: KeyboardHandler;
   private sessions: AISession[] = [];
   private selectedIndex = 0;
@@ -32,6 +36,7 @@ export class Dashboard {
     this.scanner = new SessionScanner(this.tmux);
     this.forker = new SessionForker(this.tmux);
     this.mcpManager = new MCPManager(this.tmux);
+    this.creator = new SessionCreator(this.tmux);
     this.keyboard = new KeyboardHandler();
     this.setupKeyHandlers();
   }
@@ -56,6 +61,7 @@ export class Dashboard {
 
     // Actions
     this.keyboard.on('return', () => this.attachToSession());
+    this.keyboard.on('n', () => this.handleAction('new'));
     this.keyboard.on('l', () => this.handleAction('label'));
     this.keyboard.on('f', () => this.handleAction('fork'));
     this.keyboard.on('m', () => this.handleAction('mcp'));
@@ -117,6 +123,9 @@ export class Dashboard {
     if (this.searchMode) return; // Ignore actions in search mode
 
     switch (action) {
+      case 'new':
+        this.createNewSession();
+        break;
       case 'label':
         this.labelSession();
         break;
@@ -211,6 +220,200 @@ export class Dashboard {
     // Resume refresh
     this.startRefresh();
     await this.refresh();
+  }
+
+  /**
+   * Create new AI session
+   */
+  private async createNewSession(): Promise<void> {
+    // Pause refresh
+    this.pauseRefresh();
+
+    console.clear();
+    console.log('='.repeat(50));
+    console.log('  Create New Session');
+    console.log('='.repeat(50));
+    console.log('');
+
+    try {
+      // Step 1: Select AI tool
+      const tool = await this.promptForTool();
+      if (!tool) {
+        // User cancelled
+        this.startRefresh();
+        await this.refresh();
+        return;
+      }
+
+      // Step 2: Enter project path
+      const projectPath = await this.promptForPath();
+      if (!projectPath) {
+        this.startRefresh();
+        await this.refresh();
+        return;
+      }
+
+      // Step 3: Optional label
+      const label = await this.promptForNewLabel();
+
+      // Step 4: Create session
+      const result = await this.creator.createSession({
+        tool,
+        projectPath,
+        label,
+      });
+
+      console.log('');
+      console.log('='.repeat(50));
+
+      if (!result.success) {
+        console.log(colors.error('✗ Session Creation Failed'));
+        console.log('');
+        console.log(colors.warning(result.error || 'Unknown error'));
+        console.log('');
+        console.log('Troubleshooting:');
+        console.log('  • Verify project path exists');
+        console.log(`  • Ensure ${tool} is installed`);
+        console.log('  • Check tmux is running');
+      } else {
+        console.log(colors.success('✓ Session created successfully!'));
+        console.log('');
+        console.log(`  Session: ${result.sessionName}`);
+        console.log(`  Pane ID: ${result.paneId}`);
+      }
+
+      console.log('='.repeat(50));
+      console.log('');
+      console.log('Press any key to return to dashboard...');
+
+      await this.waitForKeypress();
+    } catch (error) {
+      console.log('');
+      console.log('='.repeat(50));
+      console.log(colors.error(`✗ Creation failed: ${error instanceof Error ? error.message : String(error)}`));
+      console.log('='.repeat(50));
+      console.log('');
+      console.log('Press any key to return to dashboard...');
+
+      await this.waitForKeypress();
+    }
+
+    // Resume refresh
+    this.startRefresh();
+    await this.refresh();
+  }
+
+  /**
+   * Prompt user to select AI tool
+   */
+  private async promptForTool(): Promise<AITool | null> {
+    console.log('Select AI Tool:');
+    console.log('');
+    console.log('  1. Claude Code');
+    console.log('  2. Gemini CLI');
+    console.log('  3. OpenCode');
+    console.log('  4. Cursor');
+    console.log('  5. Aider');
+    console.log('  6. Codex');
+    console.log('');
+    console.log('  0. Cancel');
+    console.log('');
+
+    const choice = await this.promptForNumber(0, 6);
+
+    const tools: AITool[] = ['claude', 'gemini', 'opencode', 'cursor', 'aider', 'codex'];
+
+    if (choice === 0) {
+      return null;
+    }
+
+    return tools[choice - 1];
+  }
+
+  /**
+   * Prompt for project path
+   */
+  private async promptForPath(): Promise<string | null> {
+    const cwd = process.cwd();
+
+    console.log('');
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    return new Promise(resolve => {
+      rl.question(`Project path (default: ${cwd}): `, answer => {
+        rl.close();
+
+        const path = answer.trim() || cwd;
+
+        // Validate path exists
+        const absolutePath = resolvePath(path);
+        if (!existsSync(absolutePath)) {
+          console.log(colors.error(`\n✗ Path does not exist: ${path}`));
+          resolve(null);
+        } else {
+          resolve(path);
+        }
+      });
+    });
+  }
+
+  /**
+   * Prompt for optional label
+   */
+  private async promptForNewLabel(): Promise<string | undefined> {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    return new Promise(resolve => {
+      rl.question('\nOptional label (press Enter to skip): ', answer => {
+        rl.close();
+
+        // Sanitize and validate (reuse existing logic)
+        let label = answer.trim();
+
+        if (!label) {
+          resolve(undefined);
+          return;
+        }
+
+        // Remove ANSI escape sequences
+        label = label.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '');
+
+        // Enforce max length (64 chars)
+        if (label.length > 64) {
+          label = label.substring(0, 64);
+        }
+
+        resolve(label);
+      });
+    });
+  }
+
+  /**
+   * Prompt for numeric input
+   */
+  private async promptForNumber(min: number, max: number): Promise<number> {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    return new Promise(resolve => {
+      rl.question('Enter number: ', answer => {
+        rl.close();
+        const num = parseInt(answer, 10);
+        if (isNaN(num) || num < min || num > max) {
+          resolve(0);
+        } else {
+          resolve(num);
+        }
+      });
+    });
   }
 
   /**
@@ -544,7 +747,7 @@ export class Dashboard {
 
     // Footer
     console.log(boxTop(70, '├', '─', '┤'));
-    console.log('  ' + colors.dim('j/k: Navigate | Enter: Attach | l: Label | f: Fork | m: MCP'));
+    console.log('  ' + colors.dim('n: New | j/k: Navigate | Enter: Attach | l: Label | f: Fork | m: MCP'));
     console.log('  ' + colors.dim('/: Search | h/?: Help | q: Quit'));
     console.log(boxBottom(70));
 

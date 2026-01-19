@@ -6,24 +6,34 @@
 import type { AITool, SessionStatus } from '../types/index.js';
 
 /**
+ * Sanitize shell arguments to prevent command injection
+ */
+function sanitizeShellArg(arg: string): string {
+  // Remove shell metacharacters
+  return arg.replace(/[;&|`$()<>'"\\]/g, '');
+}
+
+/**
  * Get start command for AI tool
  */
 export function getToolStartCommand(tool: AITool, projectPath: string): string {
+  const safePath = sanitizeShellArg(projectPath);
+
   switch (tool) {
     case 'claude':
-      return `cd "${projectPath}" && claude code`;
+      return `cd "${safePath}" && claude code`;
     case 'gemini':
-      return `cd "${projectPath}" && gemini chat`;
+      return `cd "${safePath}" && gemini chat`;
     case 'opencode':
-      return `cd "${projectPath}" && opencode`;
+      return `cd "${safePath}" && opencode`;
     case 'cursor':
-      return `cd "${projectPath}" && cursor`;
+      return `cd "${safePath}" && cursor`;
     case 'aider':
-      return `cd "${projectPath}" && aider`;
+      return `cd "${safePath}" && aider`;
     case 'codex':
-      return `cd "${projectPath}" && codex`;
+      return `cd "${safePath}" && codex`;
     default:
-      return `cd "${projectPath}"`;
+      return `cd "${safePath}"`;
   }
 }
 
